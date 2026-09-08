@@ -120,7 +120,7 @@ export default function Footer() {
                 <nav aria-label="Quick links" className="md:pt-2">
                     <h4
                         className="text-[12px] font-semibold uppercase tracking-[0.2em]"
-                        style={{ color: ACCENT }}
+                        style={{ color: "#a1573c" }}
                     >
                         Quick Links
                     </h4>
@@ -175,7 +175,7 @@ export default function Footer() {
                     </p>
                     <p
                         className="text-[12px] font-medium uppercase tracking-[0.18em]"
-                        style={{ color: ACCENT }}
+                        style={{ color: "#a1573c" }}
                     >
                         Design / People / Performance
                     </p>

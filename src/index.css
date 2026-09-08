@@ -18,7 +18,8 @@ body {
 .font-canva,
 .font-canva input,
 .font-canva textarea,
-.font-canva button {
+.font-canva button,
+.font-canva a {
   font-family: "Canva Sans", sans-serif;
 }
 
@@ -94,13 +95,6 @@ body {
   html {
     scroll-behavior: auto;
   }
-
-  [data-sticky-stack] {
-    position: relative !important;
-    top: auto !important;
-    transform: none !important;
-    box-shadow: none !important;
-  }
 }
 
 .marquee-track {
@@ -129,6 +123,45 @@ body {
     to {
         transform: translateX(-25%);
     }
+}
+
+@keyframes case-study-hover-up {
+    0% {
+        transform: translateY(100%);
+    }
+    40% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes case-study-normal-up {
+    0%,
+    40% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.case-study-cta-fill {
+    transform: translateY(100%);
+}
+
+.case-study-cta:hover .case-study-cta-fill-hover {
+    animation: case-study-hover-up 1.05s ease-out forwards;
+}
+
+.case-study-cta:hover .case-study-cta-fill-normal {
+    animation: case-study-normal-up 1.05s ease-out forwards;
+}
+
+.case-study-cta:disabled:hover .case-study-cta-fill-hover,
+.case-study-cta:disabled:hover .case-study-cta-fill-normal {
+    animation: none;
 }
 
 @media (min-width: 768px) {

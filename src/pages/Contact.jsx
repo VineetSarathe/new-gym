@@ -19,7 +19,7 @@ const initialForm = {
 };
 
 const inputClasses =
-    "box-border h-[38px] w-full rounded-[8px] border border-[#4A4540] bg-[#EBE6DE] px-3 font-canva text-[12px] text-[#1A1A1A] placeholder:font-['Arial_MT_Pro'] placeholder:text-[#9A958C] outline-none transition-colors duration-200 focus:border-[#A75D41] focus:bg-[#F4EFEA]";
+    "box-border h-[38px] w-full rounded-[8px] border border-[#4A4540] bg-[#EBE6DE] px-3 font-canva text-[12px] text-[#1A1A1A] placeholder:font-['Arial_MT_Pro'] placeholder:text-[#9A958C] outline-none transition-colors duration-200 focus:border-[#A75D41] focus:bg-[#f3efea]";
 
 function Field({ label, required = false, children }) {
     return (
@@ -116,7 +116,7 @@ export default function Contact() {
                     <div data-enquiry-copy>
                         <h2 className="m-0 font-canva text-[clamp(2.75rem,6vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.03em] text-white">
                             Let&apos;s plan
-                            <span className="mt-[0.04em] block" style={{ color: ACCENT }}>
+                            <span className="mt-[0.04em] block" style={{ color: "#a1573c" }}>
                                 your gym
                             </span>
                         </h2>
@@ -131,13 +131,13 @@ export default function Contact() {
 
                     <div
                         data-enquiry-card
-                        className="font-canva w-full max-w-[560px] rounded-[8px] bg-[#F4EFEA] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:max-w-none"
+                        className="font-canva w-full max-w-[560px] rounded-[8px] bg-[#f3efea] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:max-w-none"
                     >
                         {status === "done" ? (
                             <div className="py-6 text-center">
                                 <p
                                     className="font-canva text-[10px] font-bold uppercase tracking-[0.2em]"
-                                    style={{ color: ACCENT }}
+                                    style={{ color: "#a1573c" }}
                                 >
                                     Enquiry received
                                 </p>
@@ -233,7 +233,7 @@ export default function Contact() {
                                                 value={form.description}
                                                 onChange={handleChange("description")}
                                                 placeholder="Size of the space, timeline, what the gym needs to do..."
-                                                className="box-border h-[68px] w-full resize-none rounded-[8px] border border-[#4A4540] bg-[#EBE6DE] px-3 py-2 pb-5 font-canva text-[12px] text-[#1A1A1A] placeholder:font-['Arial_MT_Pro'] placeholder:text-[#9A958C] outline-none transition-colors duration-200 focus:border-[#A75D41] focus:bg-[#F4EFEA]"
+                                                className="box-border h-[68px] w-full resize-none rounded-[8px] border border-[#4A4540] bg-[#EBE6DE] px-3 py-2 pb-5 font-canva text-[12px] text-[#1A1A1A] placeholder:font-['Arial_MT_Pro'] placeholder:text-[#9A958C] outline-none transition-colors duration-200 focus:border-[#A75D41] focus:bg-[#f3efea]"
                                                 aria-invalid={!!errors.description}
                                             />
                                             <span className="pointer-events-none absolute bottom-2.5 right-3 font-canva text-[8px] font-bold uppercase tracking-[0.16em] text-[#8A847C]">
@@ -267,12 +267,21 @@ export default function Contact() {
                                     <button
                                         type="submit"
                                         disabled={status === "submitting"}
-                                        className="inline-flex h-[42px] shrink-0 items-center justify-center rounded-[8px] px-5 font-canva text-[8px] font-bold uppercase tracking-[0.1em] text-white transition-colors duration-200 hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
-                                        style={{ backgroundColor: ACCENT }}
+                                        className="case-study-cta relative inline-flex h-[42px] shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-[#a1573c] px-5 font-canva text-[8px] font-bold uppercase tracking-[0.1em] text-white disabled:cursor-not-allowed disabled:opacity-60"
                                     >
-                                        {status === "submitting"
-                                            ? "Sending..."
-                                            : "Discuss Your Gym Project"}
+                                        <span
+                                            aria-hidden="true"
+                                            className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#8b4630]"
+                                        />
+                                        <span
+                                            aria-hidden="true"
+                                            className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-[#a1573c]"
+                                        />
+                                        <span className="relative z-[1]">
+                                            {status === "submitting"
+                                                ? "Sending..."
+                                                : "Discuss Your Gym Project"}
+                                        </span>
                                     </button>
                                 </div>
                             </form>

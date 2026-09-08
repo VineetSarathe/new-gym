@@ -5,11 +5,12 @@ import Logo from "./Logo";
 
 // Per website strategy doc: "Top navigation: Logo | Projects | Services | About | Contact"
 const NAV_LINKS = [
-    { label: "Projects", href: "#projects" },
-    { label: "Expertise", href: "#approach" },
-    { label: "Approach", href: "#approach" },
-    { label: "About", href: "#about" },
-    { label: "Contact", href: "#start-project" },
+    { label: "Home", href: "#home" },
+    { label: "Services", href: "#approach" },
+    { label: "Work", href: "#projects" },
+    { label: "Resources", href: "#about" },
+    { label: "Company", href: "#about" },
+    { label: "Partners", href: "#about" },
 ];
 
 // Injects the 3-role brand type system (display / editorial / body)
@@ -40,17 +41,9 @@ function useBrandFonts() {
 export default function Navbar() {
     useBrandFonts();
 
-    const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
     const navRef = useRef(null);
     const menuRef = useRef(null);
-
-    useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 40);
-        onScroll();
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
 
     useGSAP(() => {
         const prefersReduced = window.matchMedia(
@@ -109,31 +102,27 @@ export default function Navbar() {
         <>
             <header
                 ref={navRef}
-                className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-500 font-body ${
-                    scrolled
-                        ? "bg-[#050505]/95 backdrop-blur-md border-b border-[#E0C15A]/10"
-                        : "bg-[#050505]/70 backdrop-blur-sm border-b border-transparent"
-                }`}
+                className="font-canva fixed top-0 left-0 right-0 z-50 bg-transparent [&_*]:[font-family:'Canva_Sans',sans-serif]"
+                style={{ fontFamily: '"Canva Sans", sans-serif' }}
             >
                 <nav
-                    className="max-w-7xl mx-auto flex items-center justify-between px-6 md:px-10 h-20"
+                    className="mx-auto grid h-20 max-w-7xl grid-cols-[auto_1fr_auto] items-center px-6 md:px-10"
                     aria-label="Primary navigation"
                 >
                     <a
                         href="#home"
-                        className="group"
+                        className="group shrink-0"
                         aria-label="Design Diaries — Home"
                     >
                         <Logo />
                     </a>
 
-                    <ul className="hidden lg:flex items-center gap-9">
+                    <ul className="hidden min-w-0 items-center pl-16 md:pl-24 lg:flex lg:pl-32">
                         {NAV_LINKS.map((link) => (
                             <li key={link.label}>
                                 <a
                                     href={link.href}
-                                    className="relative text-[13px] font-semibold tracking-[0.14em] uppercase text-[#F5F3EE]/80 hover:text-[#E0C15A] transition-colors duration-200 py-2
-                    after:content-[''] after:absolute after:left-0 after:-bottom-0.5 after:h-[1.5px] after:w-0 after:bg-[#E0C15A] after:transition-all after:duration-300 hover:after:w-full"
+                                    className="inline-flex items-center px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-200 hover:bg-[#a1573c]"
                                 >
                                     {link.label}
                                 </a>
@@ -141,12 +130,20 @@ export default function Navbar() {
                         ))}
                     </ul>
 
-                    <div className="hidden lg:block">
+                    <div className="hidden shrink-0 pl-16 lg:block lg:pl-20">
                         <a
                             href="#start-project"
-                            className="inline-flex items-center gap-2 rounded-sm bg-[#E0C15A] px-6 py-2.5 text-[13px] font-bold uppercase tracking-[0.12em] text-[#050505] hover:bg-[#E0C15A] transition-colors duration-200"
+                            className="case-study-cta relative inline-flex items-center overflow-hidden bg-white px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] text-black"
                         >
-                            Start a Project
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#E4E4E4]"
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-white"
+                            />
+                            <span className="relative z-[1]">Start a Project</span>
                         </a>
                     </div>
 
@@ -155,7 +152,7 @@ export default function Navbar() {
                         aria-label={menuOpen ? "Close menu" : "Open menu"}
                         aria-expanded={menuOpen}
                         onClick={() => setMenuOpen((v) => !v)}
-                        className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-[6px] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E0C15A] rounded-sm"
+                        className="relative col-start-3 flex h-10 w-10 flex-col items-center justify-center gap-[6px] rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E0C15A] lg:hidden"
                     >
                         <span
                             className={`block h-[2px] w-6 bg-[#F5F3EE] transition-transform duration-300 ${
@@ -178,7 +175,7 @@ export default function Navbar() {
 
             <div
                 ref={menuRef}
-                className="lg:hidden fixed inset-0 z-40 hidden flex-col bg-[#050505] pt-28 px-8 font-body"
+                className="lg:hidden fixed inset-0 z-40 hidden flex-col bg-black pt-28 px-8 font-canva"
                 style={{ opacity: 0 }}
                 role="dialog"
                 aria-modal="true"
@@ -186,11 +183,11 @@ export default function Navbar() {
             >
                 <ul className="flex flex-col gap-1">
                     {NAV_LINKS.map((link) => (
-                        <li key={link.label} data-menu-link className="border-b border-[#F5F3EE]/10">
+                        <li key={link.label} data-menu-link className="border-b border-white/10">
                             <a
                                 href={link.href}
                                 onClick={() => setMenuOpen(false)}
-                                className="font-display block py-5 text-3xl text-[#F5F3EE]"
+                                className="block py-5 text-2xl font-semibold uppercase tracking-[0.08em] text-white hover:bg-[#a1573c] hover:px-3"
                             >
                                 {link.label}
                             </a>
@@ -201,9 +198,17 @@ export default function Navbar() {
                     href="#start-project"
                     data-menu-link
                     onClick={() => setMenuOpen(false)}
-                    className="mt-10 inline-flex justify-center items-center rounded-sm bg-[#E0C15A] px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-[#050505]"
+                    className="case-study-cta relative mt-10 inline-flex items-center justify-center overflow-hidden bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black"
                 >
-                    Start a Project
+                    <span
+                        aria-hidden="true"
+                        className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#E4E4E4]"
+                    />
+                    <span
+                        aria-hidden="true"
+                        className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-white"
+                    />
+                    <span className="relative z-[1]">Start a Project</span>
                 </a>
                 <p data-menu-link className="mt-auto mb-10 text-xs uppercase tracking-[0.2em] text-[#8F8F8F]">
                     Design Diaries · Gym &amp; Wellness Interiors

@@ -119,7 +119,7 @@ const TESTIMONIAL_STATS = [
 
 const TESTIMONIAL_BG =
     "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=2400&q=80";
-const TESTIMONIAL_ACCENT = "#A75D41";
+const TESTIMONIAL_ACCENT = "#a1573c";
 
 const INSIGHTS = [
     {
@@ -140,13 +140,31 @@ const INSIGHTS = [
     },
 ];
 
-const MARQUEE_WORDS = [
-    "GYM INTERIORS",
-    "EQUIPMENT PLANNING",
-    "CIRCULATION",
-    "LIGHTING",
-    "DURABILITY",
-    "PERFORMANCE",
+const FEATURED_GYM_PROJECTS = [
+    {
+        id: "01",
+        href: PROJECTS[0].href,
+        image: PROJECTS[0].image,
+        alt: PROJECTS[0].alt,
+        thumbs: [PROJECTS[3].image, PROJECTS[4].image, PROJECTS[6].image, PROJECTS[7].image],
+        extra: 4,
+    },
+    {
+        id: "02",
+        href: PROJECTS[1].href,
+        image: PROJECTS[1].image,
+        alt: PROJECTS[1].alt,
+        thumbs: [PROJECTS[5].image, PROJECTS[9].image, PROJECTS[11].image, PROJECTS[13].image],
+        extra: 8,
+    },
+    {
+        id: "03",
+        href: PROJECTS[2].href,
+        image: PROJECTS[2].image,
+        alt: PROJECTS[2].alt,
+        thumbs: [PROJECTS[8].image, PROJECTS[10].image, PROJECTS[12].image, PROJECTS[14].image],
+        extra: 6,
+    },
 ];
 
 const WHY_GYM_CARDS = [
@@ -750,27 +768,6 @@ function EdgeBleedProjectsColumn({ projects }) {
     );
 }
 
-function Marquee({ words }) {
-    const content = words.join("   ·   ") + "   ·   ";
-
-    return (
-        <div className="relative w-full overflow-hidden border-y border-[#E0C15A]/15 bg-[#080808] py-4 md:py-5">
-            <div className="marquee-track">
-                <div className="marquee-content">{content}</div>
-                <div className="marquee-content" aria-hidden="true">
-                    {content}
-                </div>
-                <div className="marquee-content" aria-hidden="true">
-                    {content}
-                </div>
-                <div className="marquee-content" aria-hidden="true">
-                    {content}
-                </div>
-            </div>
-        </div>
-    );
-}
-
 function GymFloorPlan() {
     return (
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-[#121212]">
@@ -850,7 +847,7 @@ function WhyGymCards() {
                     <article
                         key={card.title}
                         onMouseEnter={() => setActive(index)}
-                        className={`group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-[14px] border transition-colors duration-300 ${
+                        className={`group relative aspect-[3/4] cursor-pointer overflow-hidden rounded-[14px] border transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.38)] ${
                             isActive ? "border-[#C4A06A]/75 bg-[#1A1A1A]" : "border-transparent bg-[#1A1A1A]"
                         }`}
                     >
@@ -886,12 +883,9 @@ function WhyGymCards() {
                             }`}
                         >
                             <span className="mt-[18%] h-px w-10 bg-[#C4A06A]" />
-                            <p className="mt-auto max-w-[88%] pb-14 font-canva text-[13px] leading-[1.55] text-white">
+                            <p className="mt-auto max-w-[88%] font-canva text-[13px] leading-[1.55] text-white">
                                 {card.copy}
                             </p>
-                            <span className="absolute bottom-5 right-5 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/85 text-white">
-                                <ArrowRight className="h-4 w-4" strokeWidth={1.8} />
-                            </span>
                         </div>
                     </article>
                 );
@@ -947,39 +941,6 @@ function SpecialistList({ points }) {
             </button>
         </div>
     );
-}
-
-function useMagnetic(strength = 0.35) {
-    const ref = useRef(null);
-
-    useEffect(() => {
-        const el = ref.current;
-        if (!el || window.matchMedia("(pointer: coarse)").matches) return;
-
-        const handleMove = (e) => {
-            const rect = el.getBoundingClientRect();
-            const relX = e.clientX - rect.left - rect.width / 2;
-            const relY = e.clientY - rect.top - rect.height / 2;
-            gsap.to(el, {
-                x: relX * strength,
-                y: relY * strength,
-                duration: 0.4,
-                ease: "power2.out",
-            });
-        };
-        const handleLeave = () => {
-            gsap.to(el, { x: 0, y: 0, duration: 0.6, ease: "elastic.out(1, 0.4)" });
-        };
-
-        el.addEventListener("mousemove", handleMove);
-        el.addEventListener("mouseleave", handleLeave);
-        return () => {
-            el.removeEventListener("mousemove", handleMove);
-            el.removeEventListener("mouseleave", handleLeave);
-        };
-    }, [strength]);
-
-    return ref;
 }
 
 function InsightsList({ points }) {
@@ -1048,31 +1009,33 @@ function InsightsList({ points }) {
     );
 }
 
-function ApproachStepPhoto({ step }) {
+function ApproachStepPhoto({ step, photoRef }) {
     return (
         <div className="relative aspect-square overflow-hidden bg-[#161616]">
-            <img
-                src={step.image}
-                alt={step.alt}
-                className="h-full w-full object-cover brightness-[0.72] contrast-[1.08] saturate-[0.85]"
-                loading="lazy"
-            />
-            {step.overlay ? (
-                <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent px-2.5 pb-3">
-                    {step.overlay.lines.map((line) => (
-                        <span
-                            key={line}
-                            className={
-                                step.overlay.script
-                                    ? "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
-                                    : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
-                            }
-                        >
-                            {line}
-                        </span>
-                    ))}
-                </div>
-            ) : null}
+            <div ref={photoRef} className="absolute inset-0 opacity-0">
+                <img
+                    src={step.image}
+                    alt={step.alt}
+                    className="h-full w-full object-cover brightness-[0.72] contrast-[1.08] saturate-[0.85]"
+                    loading="lazy"
+                />
+                {step.overlay ? (
+                    <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent px-2.5 pb-3">
+                        {step.overlay.lines.map((line) => (
+                            <span
+                                key={line}
+                                className={
+                                    step.overlay.script
+                                        ? "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
+                                        : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
+                                }
+                            >
+                                {line}
+                            </span>
+                        ))}
+                    </div>
+                ) : null}
+            </div>
         </div>
     );
 }
@@ -1084,6 +1047,7 @@ function WavyProcessRow({ steps }) {
     const nodeRefs = useRef([]);
     const labelRefs = useRef([]);
     const ringRefs = useRef([]);
+    const photoRefs = useRef([]);
 
     const GOLD = "#A75D41";
     const COPPER = "#A75D41";
@@ -1123,6 +1087,12 @@ function WavyProcessRow({ steps }) {
                 }
             });
             labelRefs.current.forEach((el) => { if (el) { el.style.transition = "none"; el.style.fill = LINE; } });
+            photoRefs.current.forEach((el) => {
+                if (el) {
+                    el.style.transition = "none";
+                    el.style.opacity = "0";
+                }
+            });
             if (trailGroup) trailGroup.innerHTML = "";
             if (traveler) {
                 traveler.setAttribute("cx", String(POINTS[0].x));
@@ -1179,6 +1149,11 @@ function WavyProcessRow({ steps }) {
                     const isLast = i === steps.length - 1;
                     if (circle) { circle.style.transition = "fill 0.2s"; circle.style.fill = isLast ? "#e8c878" : GOLD; }
                     if (label) { label.style.transition = "fill 0.35s"; label.style.fill = isLast ? "#e8c878" : GOLD; }
+                    const photo = photoRefs.current[i];
+                    if (photo) {
+                        photo.style.transition = "opacity 0.5s ease";
+                        photo.style.opacity = "1";
+                    }
                     pulseRing(i);
                 }
             });
@@ -1266,9 +1241,12 @@ function WavyProcessRow({ steps }) {
             </div>
 
             <div className="grid grid-cols-6">
-                {steps.map((step) => (
+                {steps.map((step, i) => (
                     <div key={step.title} className="border-r border-white/[0.08] px-2 last:border-r-0 lg:px-3">
-                        <ApproachStepPhoto step={step} />
+                        <ApproachStepPhoto
+                            step={step}
+                            photoRef={(el) => (photoRefs.current[i] = el)}
+                        />
                         <p className="mt-3 max-w-[148px] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[9px] leading-[1.45] text-white lg:text-[10px]">
                             {step.copy}
                         </p>
@@ -1286,6 +1264,7 @@ function WavyProcessColumn({ steps }) {
     const nodeRefs = useRef([]);
     const labelRefs = useRef([]);
     const ringRefs = useRef([]);
+    const photoRefs = useRef([]);
 
     const GOLD = "#E0C15A";
     const BG = "#0A0A0A";
@@ -1328,6 +1307,12 @@ function WavyProcessColumn({ steps }) {
                 if (el) {
                     el.style.transition = "none";
                     el.style.fill = LINE;
+                }
+            });
+            photoRefs.current.forEach((el) => {
+                if (el) {
+                    el.style.transition = "none";
+                    el.style.opacity = "0";
                 }
             });
             if (trailGroup) trailGroup.innerHTML = "";
@@ -1405,6 +1390,11 @@ function WavyProcessColumn({ steps }) {
                         label.style.transition = "fill 0.35s";
                         label.style.fill = isLast ? "#e8c878" : GOLD;
                     }
+                    const photo = photoRefs.current[index];
+                    if (photo) {
+                        photo.style.transition = "opacity 0.5s ease";
+                        photo.style.opacity = "1";
+                    }
                     pulseRing(index);
                 }
             });
@@ -1450,7 +1440,10 @@ function WavyProcessColumn({ steps }) {
                         {step.title}
                     </h3>
                     <div className="mt-4 max-w-[280px]">
-                        <ApproachStepPhoto step={step} />
+                        <ApproachStepPhoto
+                            step={step}
+                            photoRef={(el) => (photoRefs.current[index] = el)}
+                        />
                     </div>
                     <p className="mt-3 max-w-[280px] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] leading-[1.5] text-white">
                         {step.copy}
@@ -1484,7 +1477,7 @@ function IntroPreloader() {
 
             <p
                 data-intro-eyebrow
-                className="font-body mb-6 text-[11px] font-bold uppercase tracking-[0.3em] text-[#E0C15A]"
+                className="font-body mb-6 text-[11px] font-bold uppercase tracking-[0.3em] text-[#a1573c]"
             >
                 Design Diaries
             </p>
@@ -1515,7 +1508,7 @@ function IntroPreloader() {
                 <div className="relative h-px w-[120px] bg-[#F5F3EE]/15">
                     <div
                         data-intro-fill
-                        className="absolute inset-y-0 left-0 w-full origin-left scale-x-0 bg-[#E0C15A]"
+                        className="absolute inset-y-0 left-0 w-full origin-left scale-x-0 bg-[#a1573c]"
                     />
                 </div>
                 <span className="font-mono text-[10px] tracking-[0.2em] text-[#F5F3EE]/40">
@@ -1530,7 +1523,6 @@ const CASE_STUDY_STEPS = [
     {
         title: "The Challenge",
         copy: "The existing space felt congested, with poor circulation between strength, cardio and functional training areas.",
-        rule: true,
     },
     {
         title: "The Thinking",
@@ -1547,13 +1539,14 @@ const CASE_STUDY_STEPS = [
 ];
 
 function CaseStudySpotlight() {
+    const [active, setActive] = useState(0);
+
     return (
         <section
-            data-sticky-stack
-            className="font-canva sticky top-0 z-[7] overflow-hidden py-16 pb-24 text-[#2A2A2A] md:py-24 md:pb-32"
+            className="font-canva relative overflow-hidden py-16 pb-24 text-[#2A2A2A] md:py-24 md:pb-32"
             style={{
                 fontFamily: '"Canva Sans", sans-serif',
-                background: "#f2ede7",
+                background: "#f3efea",
             }}
         >
             <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -1583,11 +1576,15 @@ function CaseStudySpotlight() {
                 </div>
 
                 <div className="relative mt-16 md:mt-[88px]">
-                    <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-10">
+                    <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:items-stretch md:gap-10">
                         {CASE_STUDY_STEPS.map((step, index) => (
-                            <div key={step.title} className="relative flex flex-col">
+                            <div
+                                key={step.title}
+                                className="relative flex h-full cursor-pointer flex-col"
+                                onMouseEnter={() => setActive(index)}
+                            >
                                 <div className="relative flex h-[34px] items-center">
-                                    <div className="relative z-[1] flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-[#727466] bg-[#f2ede7]">
+                                    <div className="relative z-[1] flex h-[34px] w-[34px] shrink-0 items-center justify-center rounded-full border border-[#727466] bg-[#f3efea]">
                                         <span className="font-canva text-[11px] font-medium text-[#727466]">
                                             {String(index + 1).padStart(2, "0")}
                                         </span>
@@ -1605,9 +1602,13 @@ function CaseStudySpotlight() {
                                 <p className="mt-4 max-w-[250px] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] font-normal leading-[1.7] text-[#000000]">
                                     {step.copy}
                                 </p>
-                                {step.rule ? (
-                                    <span className="mt-6 block h-[2px] w-[220px] max-w-full bg-[#2A2A2A]/55" />
-                                ) : null}
+                                <span className="mt-auto block pt-6">
+                                    <span
+                                        className={`block h-[2px] w-[220px] max-w-full transition-colors duration-300 ${
+                                            active === index ? "bg-[#2A2A2A]/55" : "bg-transparent"
+                                        }`}
+                                    />
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -1615,10 +1616,18 @@ function CaseStudySpotlight() {
                     <div className="mt-8 flex justify-end md:mt-10">
                         <a
                             href="#projects"
-                            className="inline-flex min-w-max shrink-0 items-center gap-3 whitespace-nowrap bg-[#6B6E5F] px-5 py-3.5 font-canva text-[10px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:bg-[#5C5F52]"
+                            className="case-study-cta group relative inline-flex min-w-max shrink-0 items-center gap-3 overflow-hidden whitespace-nowrap bg-[#6B6E5F] px-5 py-3.5 font-canva text-[10px] font-bold uppercase tracking-[0.14em] text-white"
                         >
-                            See the full case study
-                            <span className="inline-block h-px w-6 shrink-0 bg-white" aria-hidden="true" />
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#5C5F52]"
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-[#6B6E5F]"
+                            />
+                            <span className="relative z-[1]">See the full case study</span>
+                            <span className="relative z-[1] inline-block h-px w-6 shrink-0 bg-white" aria-hidden="true" />
                         </a>
                     </div>
                 </div>
@@ -1656,8 +1665,7 @@ function RecognitionSection() {
 
     return (
         <section
-            data-sticky-stack
-            className="font-canva sticky top-0 z-[8] overflow-hidden bg-[#f2ede7] py-16 text-[#1A1A1A] md:py-24 [&_*]:[font-family:'Canva_Sans',sans-serif]"
+            className="font-canva relative overflow-visible bg-[#f3efea] py-16 text-[#1A1A1A] md:py-24 [&_*]:[font-family:'Canva_Sans',sans-serif]"
             style={{ fontFamily: '"Canva Sans", sans-serif' }}
         >
             <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -1667,12 +1675,12 @@ function RecognitionSection() {
                     </p>
                     <h2 className="mt-4 font-canva text-[clamp(1.7rem,3.6vw,2.75rem)] font-semibold leading-[1.2] tracking-[-0.02em]">
                         <span className="text-[#1A1A1A]">Trusted. Recognised. </span>
-                        <span style={{ color: "#A3684D" }}>Making an Impact</span>
+                        <span style={{ color: "#a1573c" }}>Making an Impact</span>
                     </h2>
                 </div>
 
                 <div className="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
-                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE]">
+                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
                         <div className="relative aspect-[16/11] overflow-hidden bg-[#1A1A1A]">
                             <img
                                 src={AWARD_PHOTO}
@@ -1680,8 +1688,8 @@ function RecognitionSection() {
                                 className="h-full w-full object-cover brightness-[0.72]"
                             />
                             <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
-                            <span className="absolute bottom-4 left-4 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/80 text-white">
-                                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.8} />
+                            <span className="absolute bottom-4 left-4 cursor-pointer text-white">
+                                <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
                             </span>
                         </div>
                         <div className="flex items-center gap-3 px-4 py-4">
@@ -1693,7 +1701,7 @@ function RecognitionSection() {
                         </div>
                     </article>
 
-                    <article className="flex flex-col overflow-hidden rounded-[10px] bg-[#1C1C1C] text-white">
+                    <article className="flex flex-col overflow-hidden rounded-[10px] bg-[#1C1C1C] text-white transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.45)]">
                         <div className="flex items-start justify-between gap-4 px-4 pt-4">
                             <p className="font-canva text-[9px] uppercase tracking-[0.14em] text-white/85">
                                 Delhi&apos;s Rising Star 2024
@@ -1707,9 +1715,9 @@ function RecognitionSection() {
                                 type="button"
                                 aria-label="Previous highlights"
                                 onClick={() => setSlide((s) => (s - 1 + count) % count)}
-                                className="absolute left-2 top-1/2 z-[1] flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/80 bg-[#1C1C1C]/80 text-white"
+                                className="absolute left-2 top-1/2 z-[1] -translate-y-1/2 cursor-pointer text-white"
                             >
-                                <ArrowRight className="h-3.5 w-3.5 rotate-180" strokeWidth={1.8} />
+                                <ArrowRight className="h-6 w-6 rotate-180" strokeWidth={2.6} />
                             </button>
                             <div className="grid grid-cols-3 gap-2">
                                 {visible.map((photo) => (
@@ -1725,9 +1733,9 @@ function RecognitionSection() {
                                 type="button"
                                 aria-label="Next highlights"
                                 onClick={() => setSlide((s) => (s + 1) % count)}
-                                className="absolute right-2 top-1/2 z-[1] flex h-8 w-8 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border border-white/80 bg-[#1C1C1C]/80 text-white"
+                                className="absolute right-2 top-1/2 z-[1] -translate-y-1/2 cursor-pointer text-white"
                             >
-                                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.8} />
+                                <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
                             </button>
                         </div>
                         <div className="mt-3 flex justify-center gap-1.5 pb-3">
@@ -1755,7 +1763,7 @@ function RecognitionSection() {
                         </div>
                     </article>
 
-                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE]">
+                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
                         <div className="relative aspect-[16/11] overflow-hidden bg-[#1A1A1A]">
                             <img
                                 src={AWARD_PHOTO}
@@ -1763,8 +1771,8 @@ function RecognitionSection() {
                                 className="h-full w-full object-cover brightness-[0.72]"
                             />
                             <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
-                            <span className="absolute bottom-4 left-4 inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-white/80 text-white">
-                                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.8} />
+                            <span className="absolute bottom-4 left-4 cursor-pointer text-white">
+                                <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
                             </span>
                         </div>
                         <div className="flex items-center gap-3 px-4 py-4">
@@ -1786,6 +1794,69 @@ function RecognitionSection() {
     );
 }
 
+function CountUpStat({ value, line1, line2 }) {
+    const rootRef = useRef(null);
+    const numRef = useRef(null);
+    const parsed = value.match(/^([\d.]+)(.*)$/);
+    const target = parsed ? Number(parsed[1]) : 0;
+    const suffix = parsed ? parsed[2] : "";
+
+    useEffect(() => {
+        const el = numRef.current;
+        const trigger = rootRef.current;
+        if (!el || !trigger) return;
+
+        const proxy = { val: 0 };
+        const tween = gsap.to(proxy, {
+            val: target,
+            duration: 2,
+            ease: "power2.out",
+            paused: true,
+            onUpdate: () => {
+                el.textContent = `${Math.round(proxy.val)}${suffix}`;
+            },
+            onComplete: () => {
+                el.textContent = value;
+            },
+        });
+
+        const play = () => {
+            proxy.val = 0;
+            el.textContent = `0${suffix}`;
+            tween.restart();
+        };
+
+        const st = ScrollTrigger.create({
+            trigger,
+            start: "top 85%",
+            end: "bottom 15%",
+            onEnter: play,
+            onEnterBack: play,
+        });
+
+        return () => {
+            tween.kill();
+            st.kill();
+        };
+    }, [suffix, target, value]);
+
+    return (
+        <div ref={rootRef} className="min-w-[118px] lg:min-w-[140px]">
+            <p
+                ref={numRef}
+                className="text-[32px] font-bold leading-none text-white lg:text-[40px]"
+            >
+                0{suffix}
+            </p>
+            <p className="mt-1.5 text-[12px] font-normal leading-[1.3] text-white lg:text-[13px]">
+                {line1}
+                <br />
+                {line2}
+            </p>
+        </div>
+    );
+}
+
 function TestimonialsSection() {
     const [index, setIndex] = useState(0);
     const count = TESTIMONIALS.length;
@@ -1796,8 +1867,7 @@ function TestimonialsSection() {
 
     return (
         <section
-            data-sticky-stack
-            className="font-canva relative sticky top-0 z-[9] min-h-[100svh] overflow-hidden text-white"
+            className="font-canva relative min-h-[100svh] overflow-hidden text-white"
         >
             <img
                 src={TESTIMONIAL_BG}
@@ -1814,7 +1884,7 @@ function TestimonialsSection() {
 
                 <h2 className="mt-4 font-canva text-[clamp(2.35rem,5vw,4.15rem)] font-semibold italic leading-[1.08] tracking-[-0.01em]">
                     <span className="block text-white">The Right People</span>
-                    <span className="block" style={{ color: TESTIMONIAL_ACCENT }}>
+                    <span className="block" style={{ color: "#a1573c" }}>
                         Recognise the Work
                     </span>
                 </h2>
@@ -1825,7 +1895,7 @@ function TestimonialsSection() {
                             key={`${t.name}-${index}-${i}`}
                             className={`grid min-h-[240px] overflow-hidden md:grid-cols-[1.12fr_0.88fr] md:min-h-[268px] ${
                                 i === 0
-                                    ? "border border-[#A75D41] bg-[#383838]"
+                                    ? "border border-[#a1573c] bg-[#383838]"
                                     : "bg-[#424242]"
                             }`}
                         >
@@ -1880,16 +1950,11 @@ function TestimonialsSection() {
                                 {i > 0 ? (
                                     <span className="mx-5 h-[52px] w-px shrink-0 bg-white md:mx-8 lg:mx-10" />
                                 ) : null}
-                                <div className="min-w-[118px] lg:min-w-[140px]">
-                                    <p className="text-[32px] font-bold leading-none text-white lg:text-[40px]">
-                                        {stat.value}
-                                    </p>
-                                    <p className="mt-1.5 text-[12px] font-normal leading-[1.3] text-white lg:text-[13px]">
-                                        {stat.line1}
-                                        <br />
-                                        {stat.line2}
-                                    </p>
-                                </div>
+                                <CountUpStat
+                                    value={stat.value}
+                                    line1={stat.line1}
+                                    line2={stat.line2}
+                                />
                             </div>
                         ))}
                     </div>
@@ -1946,11 +2011,173 @@ function TestimonialsSection() {
     );
 }
 
+function ProjectGalleryCard({ project }) {
+    const [main, setMain] = useState(project.image);
+    const [thumbs, setThumbs] = useState(project.thumbs);
+    const busyRef = useRef(false);
+    const mainImgRef = useRef(null);
+    const thumbImgRefs = useRef([]);
+
+    const swapWithMain = (index) => {
+        if (busyRef.current) return;
+
+        const thumbImg = thumbImgRefs.current[index];
+        const mainImg = mainImgRef.current;
+        if (!thumbImg || !mainImg) return;
+
+        const clickedSrc = thumbs[index];
+        const currentMain = main;
+        const extraEl = thumbImg.parentElement?.querySelector("[data-extra]");
+
+        const commit = () => {
+            setThumbs((prev) => {
+                const next = [...prev];
+                next[index] = currentMain;
+                return next;
+            });
+            setMain(clickedSrc);
+            if (mainImg) mainImg.style.visibility = "";
+            if (thumbImg) thumbImg.style.visibility = "";
+            if (extraEl) extraEl.style.visibility = "";
+            busyRef.current = false;
+        };
+
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const tRect = thumbImg.getBoundingClientRect();
+        const mRect = mainImg.getBoundingClientRect();
+        if (reduceMotion || tRect.width < 2 || mRect.width < 2) {
+            commit();
+            return;
+        }
+
+        busyRef.current = true;
+        mainImg.style.visibility = "hidden";
+        thumbImg.style.visibility = "hidden";
+        if (extraEl) extraEl.style.visibility = "hidden";
+
+        const spawn = (src, rect, radius, z) => {
+            const img = document.createElement("img");
+            img.src = src;
+            img.alt = "";
+            Object.assign(img.style, {
+                position: "fixed",
+                left: `${rect.left}px`,
+                top: `${rect.top}px`,
+                width: `${rect.width}px`,
+                height: `${rect.height}px`,
+                maxWidth: "none",
+                maxHeight: "none",
+                objectFit: "cover",
+                zIndex: String(z),
+                pointerEvents: "none",
+                borderRadius: radius,
+                margin: "0",
+                padding: "0",
+                transformOrigin: "0 0",
+                willChange: "transform",
+            });
+            document.body.appendChild(img);
+            return img;
+        };
+
+        const grow = spawn(clickedSrc, tRect, "4px", 10000);
+        const shrink = spawn(currentMain, mRect, "6px", 9999);
+        grow.style.transform = "translate(0px, 0px) scale(1, 1)";
+        shrink.style.transform = "translate(0px, 0px) scale(1, 1)";
+
+        const growTo = `translate(${mRect.left - tRect.left}px, ${mRect.top - tRect.top}px) scale(${mRect.width / tRect.width}, ${mRect.height / tRect.height})`;
+        const shrinkTo = `translate(${tRect.left - mRect.left}px, ${tRect.top - mRect.top}px) scale(${tRect.width / mRect.width}, ${tRect.height / mRect.height})`;
+
+        let done = false;
+        const finish = () => {
+            if (done) return;
+            done = true;
+            grow.remove();
+            shrink.remove();
+            commit();
+        };
+
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                const motion = "transform 0.65s cubic-bezier(0.65, 0, 0.35, 1)";
+                grow.style.transition = motion;
+                shrink.style.transition = motion;
+                grow.style.transform = growTo;
+                shrink.style.transform = shrinkTo;
+            });
+        });
+
+        grow.addEventListener("transitionend", (event) => {
+            if (event.propertyName === "transform") finish();
+        });
+        window.setTimeout(finish, 850);
+    };
+
+    return (
+        <article className="group font-canva" style={{ fontFamily: '"Canva Sans", sans-serif' }}>
+            <div className="relative overflow-hidden rounded-[6px]">
+                <div className="relative aspect-[5/6] overflow-hidden bg-[#1A1A1A]">
+                    <img
+                        ref={mainImgRef}
+                        src={main}
+                        alt={project.alt}
+                        className="absolute inset-0 h-full w-full object-cover object-center"
+                    />
+                    <span className="absolute left-4 top-4 z-[1] font-canva text-[12px] font-medium tracking-[0.08em] text-white">
+                        {project.id}
+                    </span>
+                    <span className="absolute right-4 top-4 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A] text-white">
+                        <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+                    </span>
+                </div>
+            </div>
+            <div className="mt-2 grid grid-cols-4 gap-2 rounded-[6px] bg-[#D9D4CD] p-2.5 transition-colors duration-300 group-hover:bg-[#1A1A1A]">
+                {thumbs.map((src, i) => {
+                    const isLast = i === thumbs.length - 1;
+                    return (
+                        <button
+                            key={`${project.id}-thumb-${i}`}
+                            type="button"
+                            onClick={() => swapWithMain(i)}
+                            className="relative cursor-pointer overflow-hidden rounded-[4px]"
+                        >
+                            <img
+                                ref={(el) => {
+                                    thumbImgRefs.current[i] = el;
+                                }}
+                                src={src}
+                                alt=""
+                                className="aspect-[4/3] h-full w-full object-cover"
+                            />
+                            {isLast && project.extra ? (
+                                <div
+                                    data-extra
+                                    className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/50 font-canva text-[14px] font-semibold text-white"
+                                >
+                                    + {project.extra}
+                                </div>
+                            ) : null}
+                        </button>
+                    );
+                })}
+            </div>
+        </article>
+    );
+}
+
+function SelectedGymProjectsGrid() {
+    return (
+        <div className="mt-14 grid grid-cols-1 gap-6 md:mt-16 md:grid-cols-3 md:gap-7">
+            {FEATURED_GYM_PROJECTS.map((project) => (
+                <ProjectGalleryCard key={project.id} project={project} />
+            ))}
+        </div>
+    );
+}
+
 export default function Home() {
     const rootRef = useRef(null);
     const heroRef = useRef(null);
-    const heroCtaRef = useMagnetic(0.25);
-    const finalCtaRef = useMagnetic(0.25);
 
     useGSAP(
         () => {
@@ -2090,7 +2317,6 @@ export default function Home() {
                 heroTl.play(0);
             }
 
-            const stackSections = gsap.utils.toArray("[data-sticky-stack]");
             const isMobile = window.matchMedia("(max-width: 767px)").matches;
 
             ScrollTrigger.config({ ignoreMobileResize: true });
@@ -2105,93 +2331,27 @@ export default function Home() {
                 else media.addEventListener("loadeddata", freezeHeroVideo, { once: true });
             }
 
-            // A section taller than the viewport receives a negative sticky offset so all
-            // of its content scrolls past natively before its bottom pins for the next card.
-            const updateStickyOffsets = () => {
-                stackSections.forEach((section) => {
-                    const overflow = Math.max(0, section.offsetHeight - window.innerHeight);
-                    gsap.set(section, { top: -overflow });
-                });
-            };
-
-            if (!isMobile) {
-                updateStickyOffsets();
-                ScrollTrigger.addEventListener("refreshInit", updateStickyOffsets);
-
-                // As each panel enters, its text resolves smoothly from soft focus to sharp.
-                // DOM order plus stagger makes the focus travel naturally from top to bottom.
-                stackSections.slice(1).forEach((section) => {
-                    const entranceTrigger =
-                        section.querySelector("[data-reveal-group]") ?? section;
-                    const textItems = entranceTrigger.querySelectorAll(
-                        "h2, h3, p, a, button"
-                    );
-
-                    gsap.set(textItems, { willChange: "filter" });
-
-                    gsap.fromTo(
-                        textItems,
-                        {
-                            filter: "blur(4px)",
-                        },
-                        {
-                            filter: "blur(0px)",
-                            stagger: 0.025,
-                            ease: "none",
-                            immediateRender: true,
-                            scrollTrigger: {
-                                trigger: entranceTrigger,
-                                start: "top 90%",
-                                end: "top 28%",
-                                scrub: 1.2,
-                            },
-                        }
-                    );
-                });
-            }
-
             if (prefersReduced) {
                 return () => {
-                    if (!isMobile) {
-                        ScrollTrigger.removeEventListener("refreshInit", updateStickyOffsets);
-                    }
+                    document.body.style.overflow = previousBodyOverflow;
                 };
             }
 
-            // Sticky-stack polish: native scrolling positions each section while
-            // ScrollTrigger only scrubs the outgoing card's scale/shadow.
-            if (!isMobile) {
-                stackSections.forEach((section) => {
-                    gsap.to(section, {
-                        scale: 0.97,
-                        boxShadow: "0 24px 70px rgba(0, 0, 0, 0.38)",
-                        transformOrigin: "top center",
+            if (!isMobile && media) {
+                gsap.fromTo(
+                    media,
+                    { scale: 1.08 },
+                    {
+                        scale: 1,
                         ease: "none",
                         scrollTrigger: {
-                            trigger: section,
+                            trigger: heroRef.current,
                             start: "top top",
                             end: "bottom top",
                             scrub: true,
                         },
-                    });
-                });
-
-                if (media) {
-                    gsap.fromTo(
-                        media,
-                        { scale: 1.08 },
-                        {
-                            scale: 1,
-                            ease: "none",
-                            scrollTrigger: {
-                                trigger: heroRef.current,
-                                start: "top top",
-                                end: "bottom top",
-                                scrub: true,
-                            },
-                        }
-                    );
-                }
+                    }
+                );
             }
 
             gsap.utils.toArray("[data-reveal-group]").forEach((group) => {
@@ -2229,9 +2389,6 @@ export default function Home() {
             });
 
             return () => {
-                if (!isMobile) {
-                    ScrollTrigger.removeEventListener("refreshInit", updateStickyOffsets);
-                }
                 document.body.style.overflow = previousBodyOverflow;
             };
         },
@@ -2249,8 +2406,7 @@ export default function Home() {
             <section
                 id="home"
                 ref={heroRef}
-                data-sticky-stack
-                className="sticky top-0 z-[1] min-h-[100svh] overflow-hidden bg-[#050505] text-[#F5F3EE]"
+                className="relative min-h-[100svh] overflow-hidden bg-[#050505] text-[#F5F3EE]"
             >
                 {/* Background Video */}
                 <video
@@ -2293,12 +2449,11 @@ export default function Home() {
                             performance and people.
                         </p>
 
-                        <div className="mt-[36px] flex flex-col gap-4 sm:flex-row sm:items-stretch sm:gap-[18px]">
+                        <div className="group/ctas mt-[36px] flex flex-col gap-4 sm:flex-row sm:items-stretch sm:gap-[18px]">
                             <a
-                                ref={heroCtaRef}
                                 data-hero-cta
                                 href="#start-project"
-                                className="inline-flex items-center justify-center border-2 border-transparent bg-[#A3684D] px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:bg-[#B4785C]"
+                                className="inline-flex items-center justify-center border-2 border-transparent bg-[#a1573c] px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 group-has-[.hero-cta-work:hover]/ctas:border-white group-has-[.hero-cta-work:hover]/ctas:bg-transparent"
                             >
                                 START YOUR PROJECT
                             </a>
@@ -2306,7 +2461,7 @@ export default function Home() {
                             <a
                                 data-hero-cta
                                 href="#projects"
-                                className="inline-flex items-center justify-center border-2 border-white bg-transparent px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:bg-white/10"
+                                className="hero-cta-work inline-flex items-center justify-center border-2 border-white bg-transparent px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-transparent hover:bg-[#a1573c]"
                             >
                                 VIEW OUR WORK
                             </a>
@@ -2315,69 +2470,50 @@ export default function Home() {
                 </div>
             </section>
 
-            <Marquee words={MARQUEE_WORDS} />
-
             {/* 2. SELECTED GYM PROJECTS — proof */}
             <section
                 id="projects"
-                data-sticky-stack
-                className="sticky top-0 z-[2] min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/5 bg-[#080808] pb-12 pt-10 md:pb-16 md:pt-12"
+                className="font-canva relative overflow-visible bg-[#f3efea] py-16 text-[#1A1A1A] md:py-24 [&_*]:[font-family:'Canva_Sans',sans-serif]"
+                style={{ fontFamily: '"Canva Sans", sans-serif' }}
             >
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
-                    <div
-                        data-reveal-group
-                        className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between"
-                    >
-                        <div data-reveal className="max-w-xl">
-                            <Label>Selected gym projects</Label>
-
-                            <h2 className="font-display mt-4 text-3xl uppercase leading-[0.94] tracking-[-0.02em] sm:text-4xl md:text-5xl">
-                                Functional gyms.
-                                <br />
-                                <span className="text-[#E0C15A]">
-                                    High-performance rooms.
-                                </span>
-                            </h2>
-                        </div>
-
-                        <p
-                            data-reveal
-                            className="max-w-xs text-sm leading-6 text-[#8F8F8F]"
-                        >
-                            Design Diaries specialises in gym interiors planned for equipment,
-                            circulation, and how people train — functional, high-performance
-                            spaces, not decorative fit-outs.
+                    <div className="mx-auto max-w-4xl text-center">
+                        <p className="font-canva text-[11px] font-medium uppercase tracking-[0.36em] text-[#a1573c] md:text-[12px]">
+                            Gyms we&apos;ve designed
                         </p>
+                        <h2 className="mt-4 font-canva text-[clamp(1.7rem,4.4vw,3.35rem)] font-bold uppercase leading-[1.08] tracking-[-0.02em] text-[#1A1A1A]">
+                            Spaces designed to{" "}
+                            <span style={{ color: "#a1573c" }}>perform</span>
+                        </h2>
+                    </div>
 
+                    <SelectedGymProjectsGrid />
+
+                    <div className="mt-12 flex justify-center md:mt-14">
                         <a
-                            data-reveal
                             href="#projects"
-                            className="group flex shrink-0 items-center gap-2 whitespace-nowrap text-xs font-medium uppercase tracking-[0.1em] text-[#F5F3EE] transition-colors hover:text-[#E0C15A]"
+                            className="case-study-cta relative inline-flex items-center overflow-hidden bg-[#a1573c] px-8 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.16em] text-white"
                         >
-                            View all projects
-                            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-[#E0C15A] transition-transform group-hover:translate-x-1" />
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#8b4630]"
+                            />
+                            <span
+                                aria-hidden="true"
+                                className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-[#a1573c]"
+                            />
+                            <span className="relative z-[1]">Explore all projects</span>
                         </a>
                     </div>
                 </div>
-
-                {/* Projects Coverflow */}
-                <div className="relative mt-2 md:mt-4">
-                    <EdgeBleedProjectsColumn projects={PROJECTS} />
-                </div>
-
-                {/* Disclaimer / Placeholder Note */}
-                <p className="mx-auto mt-6 max-w-7xl px-6 font-mono text-[9px] uppercase tracking-[0.2em] text-[#F5F3EE]/25 md:px-10">
-                    Placeholder studies for layout — replace with confirmed gym projects
-                </p>
             </section>
 
             {/* 3. WHY GYM INTERIORS — differentiation */}
             <section
-                data-sticky-stack
-                className="font-canva sticky top-0 z-[3] min-h-[100svh] overflow-hidden py-16 pb-28 text-[#1A1A1A] md:py-20 md:pb-40"
+                className="font-canva relative min-h-[100svh] overflow-visible py-16 pb-28 text-[#1A1A1A] md:py-20 md:pb-40"
                 style={{
                     fontFamily: '"Canva Sans", sans-serif',
-                    background: "linear-gradient(180deg, #f2ede7 0%, #f2ede7 50%, #131313 100%)",
+                    background: "linear-gradient(180deg, #f3efea 0%, #f3efea 50%, #131313 100%)",
                 }}
             >
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -2389,14 +2525,11 @@ export default function Home() {
                             <p className="font-canva text-[13px] font-medium uppercase tracking-[0.28em] text-[#1A1A1A] md:text-[14px]">
                                 Why gym interiors
                             </p>
-                            <h2 className="mt-5 font-canva text-[clamp(2.35rem,5.2vw,4.35rem)] font-bold uppercase leading-[0.92] tracking-[-0.02em] text-[#A3684D]">
-                                More than
-                                <br />
-                                just
-                                <br />
-                                aesthetics
-                                <br />
-                                alone.
+                            <h2 className="mt-5 font-canva text-[clamp(2.35rem,5.2vw,4.35rem)] font-bold uppercase leading-none tracking-[-0.02em] text-[#a1573c]">
+                                <span className="block">More than</span>
+                                <span className="mt-[0.06em] block">just</span>
+                                <span className="mt-[0.06em] block">aesthetics</span>
+                                <span className="mt-[0.06em] block">alone.</span>
                             </h2>
                         </div>
                         <div data-reveal>
@@ -2413,19 +2546,16 @@ export default function Home() {
             {/* ================= APPROACH ================= */}
             <section
                 id="approach"
-                data-sticky-stack
-                className="font-canva sticky top-0 z-[5] min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/10 bg-[#0E0E0E] py-16 text-white md:py-24"
+                className="font-canva relative min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/10 bg-[#0E0E0E] py-16 text-white md:py-24"
                 style={{ fontFamily: '"Canva Sans", sans-serif' }}
             >
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
                     <div data-reveal-group>
                         <div data-reveal>
-                            <p className="font-canva text-[18px] font-medium uppercase tracking-[0.32em] text-white md:text-[22px]">
-                                The
-                            </p>
-                            <h2 className="mt-1.5 font-canva text-[clamp(2.5rem,6vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-[0.04em]">
-                                <span style={{ color: "#A06A50" }}>Sagrika</span>{" "}
-                                <span className="text-white">Method</span>
+                            <h2 className="font-canva text-[clamp(1.2rem,7vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-[0.04em] whitespace-nowrap">
+                                <span className="text-white">The </span>
+                                <span style={{ color: "#a1573c" }}>Sagrika</span>
+                                <span className="text-white"> Method</span>
                             </h2>
                             <p className="mt-6 font-canva text-[12px] font-medium uppercase tracking-[0.68em] text-[#FFFFFF] md:text-[13px]">
                                 From insight to impact
@@ -2447,8 +2577,7 @@ export default function Home() {
             {/* ================= ABOUT PREVIEW ================= */}
             <section
                 id="about"
-                data-sticky-stack
-                className="sticky top-0 z-[6] min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/5 bg-[#080808] py-20 text-[#F5F3EE] md:py-28"
+                className="relative min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/5 bg-[#080808] py-20 text-[#F5F3EE] md:py-28"
             >
                 <a
                     href="/about"
