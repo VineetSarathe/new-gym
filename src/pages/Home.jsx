@@ -4,7 +4,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 import { PROJECTS } from "../data/projects";
-import { ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -106,8 +106,8 @@ const TESTIMONIALS = [
             "Every gym owner in our group has since asked who designed our space.",
         name: "Referral client",
         detail: "Word of mouth · repeat enquiry",
-        image: "https://images.unsplash.com/photo-1570829460005-cba455b4c2e7?auto=format&fit=crop&w=900&q=80",
-        alt: "Training floor with equipment rows",
+        image: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=900&q=80",
+        alt: "Gym floor with equipment and directional markings",
     },
 ];
 
@@ -182,22 +182,31 @@ const INSIGHTS = [
 const FEATURED_GYM_PROJECTS = [
     {
         id: "01",
+        location: "Mumbai",
+        name: "Titan Gym",
+        detail: "8,000 SQ FT  |  FULL INTERIOR DESIGN",
         href: PROJECTS[0].href,
         image: PROJECTS[0].image,
         alt: PROJECTS[0].alt,
         thumbs: [PROJECTS[3].image, PROJECTS[4].image, PROJECTS[6].image, PROJECTS[7].image],
-        extra: 4,
+        extra: 5,
     },
     {
         id: "02",
+        location: "Delhi",
+        name: "The Pilates Studio",
+        detail: "3,200 SQ FT  |  STUDIO INTERIOR DESIGN",
         href: PROJECTS[1].href,
         image: PROJECTS[1].image,
         alt: PROJECTS[1].alt,
         thumbs: [PROJECTS[5].image, PROJECTS[9].image, PROJECTS[11].image, PROJECTS[13].image],
-        extra: 8,
+        extra: 4,
     },
     {
         id: "03",
+        location: "Bengaluru",
+        name: "Elevate Fitness",
+        detail: "6,500 SQ FT  |  FULL INTERIOR DESIGN",
         href: PROJECTS[2].href,
         image: PROJECTS[2].image,
         alt: PROJECTS[2].alt,
@@ -1048,41 +1057,39 @@ function InsightsList({ points }) {
     );
 }
 
-function ApproachStepPhoto({ step, photoRef, compact = false }) {
+function ApproachStepPhoto({ step, compact = false }) {
     return (
         <div className="relative aspect-square overflow-hidden bg-[#161616]">
-            <div ref={photoRef} className="absolute inset-0 opacity-0">
-                <img
-                    src={step.image}
-                    alt={step.alt}
-                    className="h-full w-full object-cover brightness-[0.72] contrast-[1.08] saturate-[0.85]"
-                    loading="lazy"
-                />
-                {step.overlay ? (
-                    <div
-                        className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent ${
-                            compact ? "px-1.5 pb-1.5" : "px-2.5 pb-3"
-                        }`}
-                    >
-                        {step.overlay.lines.map((line) => (
-                            <span
-                                key={line}
-                                className={
-                                    step.overlay.script
-                                        ? compact
-                                            ? "font-canva text-[9px] leading-[1.1] text-white"
-                                            : "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
-                                        : compact
-                                          ? "font-canva text-[6px] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white"
-                                          : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
-                                }
-                            >
-                                {line}
-                            </span>
-                        ))}
-                    </div>
-                ) : null}
-            </div>
+            <img
+                src={step.image}
+                alt={step.alt}
+                className="h-full w-full object-cover brightness-[0.72] contrast-[1.08] saturate-[0.85]"
+                loading="lazy"
+            />
+            {step.overlay ? (
+                <div
+                    className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent ${
+                        compact ? "px-1.5 pb-1.5" : "px-2.5 pb-3"
+                    }`}
+                >
+                    {step.overlay.lines.map((line) => (
+                        <span
+                            key={line}
+                            className={
+                                step.overlay.script
+                                    ? compact
+                                        ? "font-canva text-[9px] leading-[1.1] text-white"
+                                        : "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
+                                    : compact
+                                      ? "font-canva text-[6px] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white"
+                                      : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
+                            }
+                        >
+                            {line}
+                        </span>
+                    ))}
+                </div>
+            ) : null}
         </div>
     );
 }
@@ -1133,7 +1140,13 @@ function WavyProcessRow({ steps }) {
                     el.style.fill = "#ffffff";
                 }
             });
-            labelRefs.current.forEach((el) => { if (el) { el.style.transition = "none"; el.style.fill = LINE; } });
+            labelRefs.current.forEach((el) => {
+                if (el) {
+                    el.style.transition = "none";
+                    el.style.color = LINE;
+                    el.style.opacity = "0";
+                }
+            });
             photoRefs.current.forEach((el) => {
                 if (el) {
                     el.style.transition = "none";
@@ -1195,7 +1208,11 @@ function WavyProcessRow({ steps }) {
                     const label = labelRefs.current[i];
                     const isLast = i === steps.length - 1;
                     if (circle) { circle.style.transition = "fill 0.2s"; circle.style.fill = isLast ? "#e8c878" : GOLD; }
-                    if (label) { label.style.transition = "fill 0.35s"; label.style.fill = isLast ? "#e8c878" : GOLD; }
+                    if (label) {
+                        label.style.transition = "color 0.35s, opacity 0.5s ease";
+                        label.style.color = isLast ? "#e8c878" : GOLD;
+                        label.style.opacity = "1";
+                    }
                     const photo = photoRefs.current[i];
                     if (photo) {
                         photo.style.transition = "opacity 0.5s ease";
@@ -1247,7 +1264,8 @@ function WavyProcessRow({ steps }) {
                     return (
                         <div
                             key={step.title}
-                            className="absolute z-[1] -translate-x-1/2 whitespace-nowrap text-center"
+                            ref={(el) => (labelRefs.current[i] = el)}
+                            className="absolute z-[1] -translate-x-1/2 whitespace-nowrap text-center opacity-0"
                             style={{
                                 left: `${(p.x / 1200) * 100}%`,
                                 bottom: `${svgH - (p.y / 80) * svgH + gap}px`,
@@ -1289,11 +1307,12 @@ function WavyProcessRow({ steps }) {
 
             <div className="grid grid-cols-6">
                 {steps.map((step, i) => (
-                    <div key={step.title} className="border-r border-white/[0.08] px-2 last:border-r-0 lg:px-3">
-                        <ApproachStepPhoto
-                            step={step}
-                            photoRef={(el) => (photoRefs.current[i] = el)}
-                        />
+                    <div
+                        key={step.title}
+                        ref={(el) => (photoRefs.current[i] = el)}
+                        className="border-r border-white/[0.08] px-2 opacity-0 last:border-r-0 lg:px-3"
+                    >
+                        <ApproachStepPhoto step={step} />
                         <p className="mt-3 max-w-[148px] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[9px] leading-[1.45] text-white lg:text-[10px]">
                             {step.copy}
                         </p>
@@ -1559,30 +1578,31 @@ function WavyProcessColumn({ steps }) {
                     <div
                         key={step.title}
                         ref={(el) => (itemRefs.current[index] = el)}
-                        className="flex items-start gap-3"
+                        className="min-h-[108px]"
                     >
-                        <div className="w-[108px] shrink-0 sm:w-[120px]">
-                            <ApproachStepPhoto
-                                step={step}
-                                compact
-                                photoRef={(el) => (photoRefs.current[index] = el)}
-                            />
-                        </div>
-                        <div className="min-w-0 pt-0.5">
-                            <div
-                                ref={(el) => (labelRefs.current[index] = el)}
-                                className="text-white transition-colors duration-300"
-                            >
-                                <p className="font-canva text-[12px] font-medium tracking-[0.08em]">
-                                    {String(index + 1).padStart(2, "0")}
-                                </p>
-                                <h3 className="mt-0.5 font-canva text-[11px] font-bold uppercase tracking-[0.12em]">
-                                    {step.title}
-                                </h3>
+                        <div
+                            ref={(el) => (photoRefs.current[index] = el)}
+                            className="flex items-start gap-3 opacity-0"
+                        >
+                            <div className="w-[108px] shrink-0 sm:w-[120px]">
+                                <ApproachStepPhoto step={step} compact />
                             </div>
-                            <p className="mt-1.5 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] leading-[1.4] text-white/85">
-                                {step.copy}
-                            </p>
+                            <div className="min-w-0 pt-0.5">
+                                <div
+                                    ref={(el) => (labelRefs.current[index] = el)}
+                                    className="text-white transition-colors duration-300"
+                                >
+                                    <p className="font-canva text-[12px] font-medium tracking-[0.08em]">
+                                        {String(index + 1).padStart(2, "0")}
+                                    </p>
+                                    <h3 className="mt-0.5 font-canva text-[11px] font-bold uppercase tracking-[0.12em]">
+                                        {step.title}
+                                    </h3>
+                                </div>
+                                <p className="mt-1.5 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] leading-[1.4] text-white/85">
+                                    {step.copy}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 ))}
@@ -2006,7 +2026,7 @@ function TestimonialsSection() {
 
     return (
         <section
-            className="font-canva relative min-h-[100svh] overflow-hidden text-white"
+            className="font-canva relative min-h-[100svh] overflow-x-clip text-white"
         >
             <img
                 src={TESTIMONIAL_BG}
@@ -2032,11 +2052,7 @@ function TestimonialsSection() {
                     {visible.map((t, i) => (
                         <article
                             key={`${t.name}-${index}-${i}`}
-                            className={`grid min-h-[240px] overflow-hidden md:grid-cols-[1.12fr_0.88fr] md:min-h-[268px] ${
-                                i === 0
-                                    ? "border border-[#a1573c] bg-[#F2EDE7]"
-                                    : "bg-[#424242]"
-                            }`}
+                            className="grid min-h-[240px] cursor-pointer overflow-hidden border border-[#a1573c] bg-[#F2EDE7] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.38)] md:grid-cols-[1.12fr_0.88fr] md:min-h-[268px]"
                         >
                             <div className="flex flex-col px-5 py-5 md:px-6 md:py-6">
                                 <span
@@ -2054,33 +2070,21 @@ function TestimonialsSection() {
                                     &ldquo;
                                 </span>
 
-                                <p
-                                    className={`mt-1 whitespace-pre-line font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] italic leading-[1.5] ${
-                                        i === 0 ? "text-[#2A2A2A]" : "text-white"
-                                    }`}
-                                >
+                                <p className="mt-1 whitespace-pre-line font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] italic leading-[1.5] text-[#2A2A2A]">
                                     {t.quote}
                                 </p>
 
                                 <div className="mt-auto pt-6">
-                                    <p
-                                        className={`text-[11px] font-semibold uppercase tracking-[0.14em] ${
-                                            i === 0 ? "text-[#2A2A2A]" : "text-white"
-                                        }`}
-                                    >
+                                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#2A2A2A]">
                                         {t.name}
                                     </p>
-                                    <p
-                                        className={`mt-1 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[10px] uppercase tracking-[0.14em] ${
-                                            i === 0 ? "text-[#2A2A2A]/70" : "text-white/80"
-                                        }`}
-                                    >
+                                    <p className="mt-1 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[10px] uppercase tracking-[0.14em] text-[#2A2A2A]/70">
                                         {t.detail}
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="relative min-h-[180px] md:min-h-0">
+                            <div className="relative min-h-[180px] bg-[#1A1A1A] md:min-h-0">
                                 <img
                                     src={t.image}
                                     alt={t.alt}
@@ -2110,50 +2114,22 @@ function TestimonialsSection() {
                         ))}
                     </div>
 
-                    <div className="flex shrink-0 items-center gap-6 sm:ml-auto sm:gap-10">
+                    <div className="flex shrink-0 items-center gap-4 sm:ml-auto sm:gap-6">
                         <button
                             type="button"
                             onClick={prev}
                             aria-label="Previous testimonials"
-                            className="flex h-12 w-12 items-center justify-center bg-transparent p-0"
+                            className="flex h-12 w-12 cursor-pointer items-center justify-center text-white transition-opacity hover:opacity-70"
                         >
-                            <svg viewBox="0 0 48 48" className="h-full w-full" fill="none" aria-hidden="true">
-                                <path
-                                    d="M29.72 41.6 A 18.5 18.5 0 1 1 29.72 6.4"
-                                    stroke="white"
-                                    strokeWidth="1.6"
-                                    strokeLinecap="round"
-                                />
-                                <path
-                                    d="M31.5 24H17.5m0 0 7.2-8.2M17.5 24l7.2 8.2"
-                                    stroke="white"
-                                    strokeWidth="2.2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
+                            <ArrowLeft className="h-8 w-8" strokeWidth={1.8} />
                         </button>
                         <button
                             type="button"
                             onClick={next}
                             aria-label="Next testimonials"
-                            className="flex h-12 w-12 items-center justify-center bg-transparent p-0"
+                            className="flex h-12 w-12 cursor-pointer items-center justify-center text-white transition-opacity hover:opacity-70"
                         >
-                            <svg viewBox="0 0 48 48" className="h-full w-full" fill="none" aria-hidden="true">
-                                <path
-                                    d="M18.28 6.4 A 18.5 18.5 0 1 1 18.28 41.6"
-                                    stroke="white"
-                                    strokeWidth="1.6"
-                                    strokeLinecap="round"
-                                />
-                                <path
-                                    d="M16.5 24h14m0 0-7.2-8.2M30.5 24l-7.2 8.2"
-                                    stroke="white"
-                                    strokeWidth="2.2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                />
-                            </svg>
+                            <ArrowRight className="h-8 w-8" strokeWidth={1.8} />
                         </button>
                     </div>
                 </div>
@@ -2367,24 +2343,32 @@ function ProjectGalleryCard({ project }) {
     };
 
     return (
-        <article className="group font-canva" style={{ fontFamily: '"Canva Sans", sans-serif' }}>
-            <div className="relative overflow-hidden rounded-[6px]">
-                <div className="relative aspect-[5/6] overflow-hidden bg-[#1A1A1A]">
-                    <img
-                        ref={mainImgRef}
-                        src={main}
-                        alt={project.alt}
-                        className="absolute inset-0 h-full w-full object-cover object-center"
-                    />
-                    <span className="absolute left-4 top-4 z-[1] font-canva text-[12px] font-medium tracking-[0.08em] text-white">
-                        {project.id}
-                    </span>
-                    <span className="absolute right-4 top-4 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A] text-white">
-                        <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-                    </span>
-                </div>
+        <article className="group overflow-hidden rounded-[6px] font-canva" style={{ fontFamily: '"Canva Sans", sans-serif' }}>
+            <div className="relative aspect-[5/6] overflow-hidden bg-[#1A1A1A]">
+                <img
+                    ref={mainImgRef}
+                    src={main}
+                    alt={project.alt}
+                    className="absolute inset-0 h-full w-full object-cover object-center"
+                />
+                <span className="absolute left-4 top-4 z-[1] font-canva text-[12px] font-medium tracking-[0.08em] text-white">
+                    {project.id}
+                </span>
+                <span className="absolute right-4 top-4 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A] text-white">
+                    <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
+                </span>
             </div>
-            <div className="mt-2 grid grid-cols-4 gap-2 rounded-[6px] bg-[#D9D4CD] p-2.5 transition-colors duration-300 group-hover:bg-[#1A1A1A]">
+            <div className="bg-[#D9D4CD] px-3.5 pb-2.5 pt-4 transition-colors duration-300 group-hover:bg-[#1A1A1A]">
+                <p className="font-canva text-[11px] font-bold uppercase tracking-[0.16em] text-[#a1573c]">
+                    {project.location}
+                </p>
+                <h3 className="mt-2 font-canva text-[22px] font-bold leading-none tracking-[-0.02em] text-[#1A1A1A] transition-colors duration-300 group-hover:text-white md:text-[24px]">
+                    {project.name}
+                </h3>
+                <p className="mt-2 font-canva text-[10px] font-medium uppercase tracking-[0.08em] text-[#1A1A1A]/55 transition-colors duration-300 group-hover:text-white/70">
+                    {project.detail}
+                </p>
+                <div className="mt-4 grid grid-cols-4 gap-2">
                 {thumbs.map((src, i) => {
                     const isLast = i === thumbs.length - 1;
                     return (
@@ -2405,14 +2389,15 @@ function ProjectGalleryCard({ project }) {
                             {isLast && project.extra ? (
                                 <div
                                     data-extra
-                                    className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/50 font-canva text-[14px] font-semibold text-white"
+                                    className="pointer-events-none absolute inset-0 flex items-center justify-center bg-[#D8D4CE] font-canva text-[14px] font-semibold text-[#1A1A1A]"
                                 >
-                                    + {project.extra}
+                                    +{project.extra}
                                 </div>
                             ) : null}
                         </button>
                     );
                 })}
+                </div>
             </div>
         </article>
     );
@@ -2695,28 +2680,36 @@ export default function Home() {
 
                         <p
                             data-hero-sub
-                            className="m-0 mt-4 max-w-[28rem] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(14px,3.5vw,18px)] font-normal leading-[1.55] text-white sm:mt-[16px]"
+                            className="m-0 mt-4 max-w-[38rem] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(14px,3.5vw,18px)] font-normal leading-[1.55] text-white sm:mt-[16px]"
                         >
-                            Gym interiors designed around movement,
+                            Specialist interior design for gyms and fitness spaces
                             <br className="hidden sm:block" />
-                            {" "}performance and people.
+                            {" "}- designed around movement, performance and the people who use them.
                         </p>
 
-                        <div className="group/ctas mt-8 flex w-full flex-col gap-3 sm:mt-[36px] sm:w-auto sm:flex-row sm:items-stretch sm:gap-[18px]">
+                        <div className="hero-cta-pair group/ctas mt-8 flex w-full flex-col gap-3 sm:mt-[36px] sm:w-auto sm:flex-row sm:items-stretch sm:gap-[18px]">
                             <a
                                 data-hero-cta
                                 href="#start-project"
-                                className="inline-flex items-center justify-center border-2 border-transparent bg-[#a1573c] px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 group-has-[.hero-cta-work:hover]/ctas:border-white group-has-[.hero-cta-work:hover]/ctas:bg-transparent sm:px-10 sm:py-[14px] sm:text-[12px]"
+                                className="hero-cta-start relative inline-flex items-center justify-center overflow-hidden border-2 border-transparent bg-[#a1573c] px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:bg-[#c47255] group-has-[.hero-cta-work:hover]/ctas:border-white group-has-[.hero-cta-work:hover]/ctas:bg-transparent sm:px-10 sm:py-[14px] sm:text-[12px]"
                             >
-                                START YOUR PROJECT
+                                <span
+                                    aria-hidden="true"
+                                    className="hero-cta-fill hero-cta-start-base pointer-events-none absolute inset-0 bg-[#a1573c]"
+                                />
+                                <span className="relative z-[1]">START YOUR PROJECT</span>
                             </a>
 
                             <a
                                 data-hero-cta
                                 href="#projects"
-                                className="hero-cta-work inline-flex items-center justify-center border-2 border-white bg-transparent px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-transparent hover:bg-[#a1573c] sm:px-10 sm:py-[14px] sm:text-[12px]"
+                                className="hero-cta-work relative inline-flex items-center justify-center overflow-hidden border-2 border-white px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white hover:border-transparent sm:px-10 sm:py-[14px] sm:text-[12px]"
                             >
-                                VIEW OUR WORK
+                                <span
+                                    aria-hidden="true"
+                                    className="hero-cta-fill hero-cta-work-fill pointer-events-none absolute inset-0 bg-[#a1573c]"
+                                />
+                                <span className="relative z-[1]">VIEW OUR WORK</span>
                             </a>
                         </div>
                     </div>
@@ -2784,12 +2777,14 @@ export default function Home() {
                             <p className="font-canva text-[13px] font-medium uppercase tracking-[0.28em] text-[#1A1A1A] md:text-[14px]">
                                 Why gym interiors
                             </p>
-                            <h2 className="mt-5 font-canva text-[clamp(2.35rem,5.2vw,4.35rem)] font-bold uppercase leading-none tracking-[-0.02em] text-[#a1573c]">
-                                <span className="block">More than</span>
-                                <span className="mt-[0.06em] block">just</span>
-                                <span className="mt-[0.06em] block">aesthetics</span>
-                                <span className="mt-[0.06em] block">alone</span>
+                            <h2 className="mt-5 font-canva text-[clamp(1.85rem,4.2vw,3.35rem)] font-bold uppercase leading-[0.95] tracking-[-0.02em] text-[#a1573c]">
+                                <span className="block">A gym isn&apos;t</span>
+                                <span className="mt-[0.06em] block">just a room</span>
+                                <span className="mt-[0.06em] block">with equipment</span>
                             </h2>
+                            <p className="mt-5 font-canva text-[clamp(1.15rem,2.2vw,1.65rem)] font-normal leading-snug tracking-[-0.02em] text-[#1A1A1A]">
+                                Every square foot has a job
+                            </p>
                         </div>
                         <div data-reveal>
                             <GymFloorPlan />
@@ -2845,9 +2840,15 @@ export default function Home() {
                     className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-24 w-full"
                 />
                 <img
-                    src="/images/about-hero.png"
-                    alt="Sagrika Saraf, lead interior designer"
+                    src="/images/about.png"
+                    alt=""
+                    aria-hidden="true"
                     className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] w-full object-cover object-center"
+                />
+                <img
+                    src="/images/aboutsagrika.png?v=3"
+                    alt="Sagrika Saraf, lead interior designer"
+                    className="pointer-events-none absolute inset-x-0 z-[2] mx-auto w-auto object-contain top-[11.5rem] h-[62svh] max-w-[min(88vw,400px)] object-top lg:top-0 lg:h-[100svh] lg:max-w-[min(92vw,640px)] lg:object-bottom"
                 />
                 <div
                     aria-hidden="true"
@@ -2864,20 +2865,20 @@ export default function Home() {
                 >
                     <div
                         data-reveal
-                        className="relative max-w-[340px] lg:absolute lg:left-[3.5%] lg:top-1/2 lg:max-w-[380px] lg:-translate-y-[58%]"
+                        className="relative max-w-full lg:absolute lg:left-[3.5%] lg:top-[20%] lg:max-w-[min(28vw,420px)] lg:translate-y-0"
                     >
                         <p className="font-canva mb-3 text-[12px] font-medium uppercase tracking-[0.42em] text-white md:mb-4 md:text-[13px]">
                             About
                         </p>
-                        <h2 className="font-canva text-[clamp(2rem,10vw,4.65rem)] font-bold uppercase leading-[0.9] tracking-[0.01em]">
-                            <span className="block text-[#a1573c]">Sagrika</span>
-                            <span className="block text-white">Saraf</span>
+                        <h2 className="font-canva whitespace-nowrap text-[clamp(1.45rem,3.6vw,2.7rem)] font-bold uppercase leading-none tracking-[0.12em]">
+                            <span className="text-[#a1573c]">Sagrika</span>
+                            <span className="ml-[0.28em] text-white">Saraf</span>
                         </h2>
                     </div>
 
                     <div
                         data-reveal
-                        className="relative mt-8 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[2%] lg:top-1/2 lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:-translate-y-[42%]"
+                        className="relative mt-8 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[1%] lg:top-[20%] lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:translate-y-0"
                     >
                         <p className="font-arial-mt text-left text-[12px] font-normal italic leading-[1.55] text-white sm:text-[13px] sm:leading-[1.6] md:text-[13.5px] md:leading-[1.62]">
                             <span className="block xl:whitespace-nowrap">
@@ -2902,13 +2903,16 @@ export default function Home() {
 
                         <a
                             href="/about"
-                            className="font-arial-mt group mt-7 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-[#a1573c] transition-opacity duration-300 hover:opacity-80 md:mt-8"
+                            className="font-arial-mt story-link group mt-7 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-[#a1573c] md:mt-8"
                             aria-label="Read the complete story about Sagrika and Design Diaries"
                         >
-                            Read full story
+                            <span className="relative inline-block pb-[3px]">
+                                Read full story
+                                <span className="absolute bottom-0 left-0 h-px w-0 bg-current transition-all duration-500 ease-out group-hover:w-full" />
+                            </span>
                             <svg
                                 viewBox="0 0 96 10"
-                                className="h-[9px] w-[76px] overflow-visible md:w-[92px]"
+                                className="story-link-arrow h-[9px] w-[76px] overflow-visible md:w-[92px]"
                                 fill="none"
                                 aria-hidden="true"
                             >

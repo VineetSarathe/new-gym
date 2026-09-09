@@ -1,27 +1,13 @@
-import logoMark from "../assets/logo.svg";
-
-export default function Logo({ compact = false, onLight = false }) {
+export default function Logo({ compact = false }) {
     return (
-        <span className="inline-flex items-center gap-2.5 min-w-0">
+        <span className="inline-flex min-w-0 items-center">
             <img
-                src={logoMark}
-                alt=""
-                className={`h-8 w-8 shrink-0 transition-[filter] duration-300 md:h-9 md:w-9 ${
-                    onLight ? "brightness-0" : ""
+                src="/images/logo.png"
+                alt="DesignDiaries by Sagrika"
+                className={`w-auto object-contain ${
+                    compact ? "h-11 md:h-12" : "h-14 md:h-16"
                 }`}
             />
-            <span
-                className={`font-canva leading-none tracking-[0.08em] whitespace-nowrap transition-colors duration-300 ${
-                    onLight ? "text-[#1A1A1A]" : "text-[#F5F3EE]"
-                } ${
-                    compact
-                        ? "text-lg md:text-xl"
-                        : "text-[15px] sm:text-lg md:text-[22px]"
-                }`}
-                style={{ fontFamily: '"Canva Sans", sans-serif' }}
-            >
-                DESIGN DIARIES
-            </span>
         </span>
     );
 }

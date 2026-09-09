@@ -175,25 +175,13 @@ export default function Navbar() {
                     <div className="hidden shrink-0 pl-16 lg:block lg:pl-20">
                         <a
                             href="#start-project"
-                            className={`case-study-cta relative inline-flex items-center overflow-hidden px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
+                            className={`relative inline-flex items-center px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
                                 darkChrome
-                                    ? "bg-[#1A1A1A] text-white"
-                                    : "bg-white text-black"
+                                    ? "bg-[#1A1A1A] text-white hover:bg-[#3a3a3a]"
+                                    : "bg-white text-black hover:bg-[#E8E8E8]"
                             }`}
                         >
-                            <span
-                                aria-hidden="true"
-                                className={`case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 ${
-                                    darkChrome ? "bg-[#333]" : "bg-[#E4E4E4]"
-                                }`}
-                            />
-                            <span
-                                aria-hidden="true"
-                                className={`case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 ${
-                                    darkChrome ? "bg-[#1A1A1A]" : "bg-white"
-                                }`}
-                            />
-                            <span className="relative z-[1]">Start a Project</span>
+                            Start a Project
                         </a>
                     </div>
 
@@ -248,17 +236,9 @@ export default function Navbar() {
                     href="#start-project"
                     data-menu-link
                     onClick={() => setMenuOpen(false)}
-                    className="case-study-cta relative mt-10 inline-flex items-center justify-center overflow-hidden bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black"
+                    className="relative mt-10 inline-flex items-center justify-center bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors duration-300 hover:bg-[#E8E8E8]"
                 >
-                    <span
-                        aria-hidden="true"
-                        className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#E4E4E4]"
-                    />
-                    <span
-                        aria-hidden="true"
-                        className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-white"
-                    />
-                    <span className="relative z-[1]">Start a Project</span>
+                    Start a Project
                 </a>
                 <p data-menu-link className="mt-auto mb-10 text-xs uppercase tracking-[0.2em] text-[#8F8F8F]">
                     Design Diaries · Gym &amp; Wellness Interiors
