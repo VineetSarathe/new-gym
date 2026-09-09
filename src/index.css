@@ -5,6 +5,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -13,6 +14,8 @@ body {
   font-family: Manrope, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  max-width: 100%;
 }
 
 .font-canva,
@@ -26,6 +29,11 @@ body {
 .font-canva input::placeholder,
 .font-canva textarea::placeholder {
   font-family: "Arial MT Pro", "Arial MT", Arial, sans-serif;
+}
+
+#root {
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 /* Visible, high-contrast focus ring for keyboard users on a dark theme */

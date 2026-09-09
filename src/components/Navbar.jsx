@@ -42,6 +42,7 @@ export default function Navbar() {
     useBrandFonts();
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [onLight, setOnLight] = useState(false);
     const navRef = useRef(null);
     const menuRef = useRef(null);
 
@@ -98,6 +99,45 @@ export default function Navbar() {
         };
     }, [menuOpen]);
 
+    useEffect(() => {
+        const intersecting = new Set();
+        let observer;
+
+        const connect = () => {
+            observer?.disconnect();
+            intersecting.clear();
+            const headerH = navRef.current?.offsetHeight || 80;
+            const bottomInset = Math.max(0, window.innerHeight - headerH);
+            observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) intersecting.add(entry.target);
+                        else intersecting.delete(entry.target);
+                    });
+                    setOnLight(intersecting.size > 0);
+                },
+                {
+                    root: null,
+                    rootMargin: `0px 0px -${bottomInset}px 0px`,
+                    threshold: 0,
+                }
+            );
+            document.querySelectorAll("[data-nav-light]").forEach((el) => {
+                observer.observe(el);
+            });
+        };
+
+        connect();
+        window.addEventListener("resize", connect);
+        return () => {
+            window.removeEventListener("resize", connect);
+            observer?.disconnect();
+        };
+    }, []);
+
+    const darkChrome = onLight && !menuOpen;
+    const barClass = darkChrome ? "bg-[#1A1A1A]" : "bg-[#F5F3EE]";
+
     return (
         <>
             <header
@@ -114,7 +154,7 @@ export default function Navbar() {
                         className="group shrink-0"
                         aria-label="Design Diaries — Home"
                     >
-                        <Logo />
+                        <Logo onLight={darkChrome} />
                     </a>
 
                     <ul className="hidden min-w-0 items-center pl-16 md:pl-24 lg:flex lg:pl-32">
@@ -122,7 +162,9 @@ export default function Navbar() {
                             <li key={link.label}>
                                 <a
                                     href={link.href}
-                                    className="inline-flex items-center px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.12em] text-white transition-colors duration-200 hover:bg-[#a1573c]"
+                                    className={`inline-flex items-center px-3.5 py-1.5 text-[12px] font-semibold uppercase tracking-[0.12em] transition-colors duration-300 hover:bg-[#a1573c] hover:text-white ${
+                                        darkChrome ? "text-[#1A1A1A]" : "text-white"
+                                    }`}
                                 >
                                     {link.label}
                                 </a>
@@ -133,15 +175,23 @@ export default function Navbar() {
                     <div className="hidden shrink-0 pl-16 lg:block lg:pl-20">
                         <a
                             href="#start-project"
-                            className="case-study-cta relative inline-flex items-center overflow-hidden bg-white px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] text-black"
+                            className={`case-study-cta relative inline-flex items-center overflow-hidden px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
+                                darkChrome
+                                    ? "bg-[#1A1A1A] text-white"
+                                    : "bg-white text-black"
+                            }`}
                         >
                             <span
                                 aria-hidden="true"
-                                className="case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 bg-[#E4E4E4]"
+                                className={`case-study-cta-fill case-study-cta-fill-hover pointer-events-none absolute inset-0 ${
+                                    darkChrome ? "bg-[#333]" : "bg-[#E4E4E4]"
+                                }`}
                             />
                             <span
                                 aria-hidden="true"
-                                className="case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 bg-white"
+                                className={`case-study-cta-fill case-study-cta-fill-normal pointer-events-none absolute inset-0 ${
+                                    darkChrome ? "bg-[#1A1A1A]" : "bg-white"
+                                }`}
                             />
                             <span className="relative z-[1]">Start a Project</span>
                         </a>
@@ -155,17 +205,17 @@ export default function Navbar() {
                         className="relative col-start-3 flex h-10 w-10 flex-col items-center justify-center gap-[6px] rounded-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E0C15A] lg:hidden"
                     >
                         <span
-                            className={`block h-[2px] w-6 bg-[#F5F3EE] transition-transform duration-300 ${
+                            className={`block h-[2px] w-6 transition-[transform,background-color] duration-300 ${barClass} ${
                                 menuOpen ? "translate-y-[8px] rotate-45" : ""
                             }`}
                         />
                         <span
-                            className={`block h-[2px] w-6 bg-[#F5F3EE] transition-opacity duration-200 ${
+                            className={`block h-[2px] w-6 transition-[opacity,background-color] duration-200 ${barClass} ${
                                 menuOpen ? "opacity-0" : "opacity-100"
                             }`}
                         />
                         <span
-                            className={`block h-[2px] w-6 bg-[#F5F3EE] transition-transform duration-300 ${
+                            className={`block h-[2px] w-6 transition-[transform,background-color] duration-300 ${barClass} ${
                                 menuOpen ? "-translate-y-[8px] -rotate-45" : ""
                             }`}
                         />

@@ -74,9 +74,6 @@ export default function Contact() {
             next.email = "Enter a valid email.";
         }
         if (!form.city.trim()) next.city = "Enter your city.";
-        if (!form.description.trim()) {
-            next.description = "Tell us briefly about the project.";
-        }
         setErrors(next);
         return Object.keys(next).length === 0;
     };
@@ -111,7 +108,7 @@ export default function Contact() {
             />
             <div className="absolute inset-0 bg-black/50" />
 
-            <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1400px] items-center px-[6%] py-16 lg:px-[7%]">
+            <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1400px] items-center px-5 py-24 sm:px-[6%] lg:px-[7%]">
                 <div className="grid w-full items-center gap-10 lg:grid-cols-[minmax(0,1fr)_560px] lg:gap-x-10 xl:gap-x-14">
                     <div data-enquiry-copy>
                         <h2 className="m-0 font-canva text-[clamp(2.75rem,6vw,5rem)] font-semibold uppercase leading-[0.9] tracking-[-0.03em] text-white">
@@ -120,18 +117,14 @@ export default function Contact() {
                                 your gym
                             </span>
                         </h2>
-                        <p className="mt-28 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(12px,1.12vw,16px)] font-normal leading-[1.7] text-white lg:mt-40">
-                            <span className="whitespace-nowrap">
-                                Tell us about the space, the equipment, and how people will train. A short form,
-                            </span>
-                            <br />
-                            then a real conversation.
+                        <p className="mt-10 max-w-xl font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(12px,3.4vw,16px)] font-normal leading-[1.7] text-white lg:mt-40">
+                            Tell us about the space, the equipment, and how people will train. A short form, then a real conversation.
                         </p>
                     </div>
 
                     <div
                         data-enquiry-card
-                        className="font-canva w-full max-w-[560px] rounded-[8px] bg-[#f3efea] p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:max-w-none"
+                        className="font-canva w-full max-w-full rounded-[8px] bg-[#f3efea] p-5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] sm:p-8 lg:max-w-none"
                     >
                         {status === "done" ? (
                             <div className="py-6 text-center">
@@ -227,7 +220,7 @@ export default function Contact() {
                                 </div>
 
                                 <div className="mt-6">
-                                    <Field label="Tell us about the project" required>
+                                    <Field label="Tell us about (optional)">
                                         <div className="relative">
                                             <textarea
                                                 value={form.description}
@@ -267,7 +260,7 @@ export default function Contact() {
                                     <button
                                         type="submit"
                                         disabled={status === "submitting"}
-                                        className="case-study-cta relative inline-flex h-[42px] shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-[#a1573c] px-5 font-canva text-[8px] font-bold uppercase tracking-[0.1em] text-white disabled:cursor-not-allowed disabled:opacity-60"
+                                        className="case-study-cta relative inline-flex h-[42px] w-full shrink-0 items-center justify-center overflow-hidden rounded-[8px] bg-[#a1573c] px-5 font-canva text-[8px] font-bold uppercase tracking-[0.1em] text-white disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
                                     >
                                         <span
                                             aria-hidden="true"

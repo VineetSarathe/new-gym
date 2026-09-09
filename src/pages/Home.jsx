@@ -121,6 +121,45 @@ const TESTIMONIAL_BG =
     "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=2400&q=80";
 const TESTIMONIAL_ACCENT = "#a1573c";
 
+const FAQS = [
+    {
+        q: "Where are you based out of?",
+        a: "Delhi, available for meetings on appointment.",
+    },
+    {
+        q: "Do you provide turn-key solutions?",
+        a: "No, we provide designs.",
+    },
+    {
+        q: "Is your service available pan India?",
+        a: "Yes, we do provide interior design consultation pan India.",
+    },
+    {
+        q: "Do you visit the site?",
+        a: "Yes, we do visit the site as per requirements. Charges vary from project to project.",
+    },
+    {
+        q: "Can I get 2-3 options for design?",
+        a: "The design is completely customised as per your requirements and site. A few changes are possible, but multiple options are not provided.",
+    },
+    {
+        q: "Can I get only 3D views?",
+        a: "3D views are the end product of the design. They cannot be treated separately. We do provide 3D views as a part of our complete service.",
+    },
+    {
+        q: "How will I execute on site on my own?",
+        a: "We provide detailed lists of materials, drawings, technical support on call, and guidance during the execution phase. We are available on WhatsApp every day for queries to make the execution process smooth.",
+    },
+    {
+        q: "Will I find the materials you use in the design locally?",
+        a: "Yes, we do provide support with vendors and exact codes for all the materials required. For example, if there is a light to be bought, we'll mention wattage, colour body, temperature, brand if applicable, and a link to this product for purchase online.",
+    },
+    {
+        q: "How much time will it take for designing?",
+        a: "The time frame is between 20–40 days depending on the scope of work.",
+    },
+];
+
 const INSIGHTS = [
     {
         title: "Gym planning",
@@ -1009,7 +1048,7 @@ function InsightsList({ points }) {
     );
 }
 
-function ApproachStepPhoto({ step, photoRef }) {
+function ApproachStepPhoto({ step, photoRef, compact = false }) {
     return (
         <div className="relative aspect-square overflow-hidden bg-[#161616]">
             <div ref={photoRef} className="absolute inset-0 opacity-0">
@@ -1020,14 +1059,22 @@ function ApproachStepPhoto({ step, photoRef }) {
                     loading="lazy"
                 />
                 {step.overlay ? (
-                    <div className="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent px-2.5 pb-3">
+                    <div
+                        className={`absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/55 to-transparent ${
+                            compact ? "px-1.5 pb-1.5" : "px-2.5 pb-3"
+                        }`}
+                    >
                         {step.overlay.lines.map((line) => (
                             <span
                                 key={line}
                                 className={
                                     step.overlay.script
-                                        ? "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
-                                        : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
+                                        ? compact
+                                            ? "font-canva text-[9px] leading-[1.1] text-white"
+                                            : "font-canva text-[13px] leading-[1.15] text-white lg:text-[15px]"
+                                        : compact
+                                          ? "font-canva text-[6px] font-bold uppercase leading-[1.15] tracking-[0.06em] text-white"
+                                          : "font-canva text-[8px] font-bold uppercase leading-[1.2] tracking-[0.08em] text-white lg:text-[9px]"
                                 }
                             >
                                 {line}
@@ -1257,38 +1304,73 @@ function WavyProcessRow({ steps }) {
     );
 }
 
-function WavyProcessColumn({ steps }) {
-    const trackRef = useRef(null);
-    const travelerRef = useRef(null);
-    const trailRef = useRef(null);
-    const nodeRefs = useRef([]);
-    const labelRefs = useRef([]);
-    const ringRefs = useRef([]);
-    const photoRefs = useRef([]);
+function verticalWavePath(points) {
+    if (!points.length) return "";
+    let d = `M ${points[0].x} ${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+        const a = points[i - 1];
+        const b = points[i];
+        const dy = b.y - a.y;
+        const dir = i % 2 === 1 ? 1 : -1;
+        d += ` C ${a.x + dir * 18} ${a.y + dy * 0.32}, ${b.x + dir * 18} ${a.y + dy * 0.68}, ${b.x} ${b.y}`;
+    }
+    return d;
+}
 
-    const GOLD = "#E0C15A";
-    const BG = "#0A0A0A";
+function WavyProcessColumn({ steps }) {
+    const rootRef = useRef(null);
+    const trackRef = useRef(null);
+    const trailRef = useRef(null);
+    const travelerRef = useRef(null);
+    const itemRefs = useRef([]);
+    const nodeRefs = useRef([]);
+    const ringRefs = useRef([]);
+    const labelRefs = useRef([]);
+    const photoRefs = useRef([]);
+    const [geom, setGeom] = useState({ h: 0, points: [] });
+
+    const COPPER = "#A75D41";
+    const GOLD = "#A75D41";
     const LINE = "#F5F3EE";
 
-    const path =
-        "M 96 28 C 96 78, 234 88, 234 138 S 96 198, 96 248 S 234 308, 234 358 S 96 418, 96 468 S 234 528, 234 578";
-    const POINTS = [
-        { x: 96, y: 28 },
-        { x: 234, y: 138 },
-        { x: 96, y: 248 },
-        { x: 234, y: 358 },
-        { x: 96, y: 468 },
-        { x: 234, y: 578 },
-    ];
-    const stopFracs = [0, 0.2, 0.4, 0.6, 0.8, 1];
+    useLayoutEffect(() => {
+        const root = rootRef.current;
+        if (!root) return;
+
+        const measure = () => {
+            const top = root.getBoundingClientRect().top;
+            const points = itemRefs.current.map((el) => {
+                if (!el) return { x: 20, y: 0 };
+                const r = el.getBoundingClientRect();
+                return { x: 20, y: r.top - top + r.height / 2 };
+            });
+            const h = root.offsetHeight;
+            setGeom((prev) => {
+                const same =
+                    prev.h === h &&
+                    prev.points.length === points.length &&
+                    prev.points.every((p, i) => Math.abs(p.y - points[i].y) < 0.5);
+                return same ? prev : { h, points };
+            });
+        };
+
+        measure();
+        const ro = new ResizeObserver(measure);
+        ro.observe(root);
+        itemRefs.current.forEach((el) => el && ro.observe(el));
+        return () => ro.disconnect();
+    }, [steps.length]);
 
     useEffect(() => {
         const trackPath = trackRef.current;
-        if (!trackPath) return;
-
-        const total = trackPath.getTotalLength();
         const traveler = travelerRef.current;
         const trailGroup = trailRef.current;
+        const root = rootRef.current;
+        const POINTS = geom.points;
+        if (!trackPath || !root || POINTS.length < 2) return;
+
+        const total = trackPath.getTotalLength();
+        const stopFracs = [0, 0.2, 0.4, 0.6, 0.8, 1];
         let trailDots = [];
         let hitStops = {};
         let startTime = null;
@@ -1300,13 +1382,13 @@ function WavyProcessColumn({ steps }) {
             nodeRefs.current.forEach((el) => {
                 if (el) {
                     el.style.transition = "none";
-                    el.style.fill = BG;
+                    el.style.fill = "#ffffff";
                 }
             });
             labelRefs.current.forEach((el) => {
                 if (el) {
                     el.style.transition = "none";
-                    el.style.fill = LINE;
+                    el.style.color = LINE;
                 }
             });
             photoRefs.current.forEach((el) => {
@@ -1338,29 +1420,22 @@ function WavyProcessColumn({ steps }) {
             ring.style.opacity = "0";
         }
 
-        function animate(ts) {
+        function step(ts) {
             if (!startTime) startTime = ts;
             const elapsed = ts - startTime;
             const progress = Math.min(elapsed / duration, 1);
-            const point = trackPath.getPointAtLength(progress * total);
+            const pt = trackPath.getPointAtLength(progress * total);
 
             if (traveler) {
-                traveler.setAttribute("cx", String(point.x));
-                traveler.setAttribute("cy", String(point.y));
+                traveler.setAttribute("cx", String(pt.x));
+                traveler.setAttribute("cy", String(pt.y));
                 pulsePhase += 0.15;
-                traveler.setAttribute(
-                    "r",
-                    (4 + Math.sin(pulsePhase) * 1.2).toFixed(2),
-                );
+                traveler.setAttribute("r", (4 + Math.sin(pulsePhase) * 1.2).toFixed(2));
             }
-
             if (elapsed % 60 < 20 && trailGroup) {
-                const dot = document.createElementNS(
-                    "http://www.w3.org/2000/svg",
-                    "circle",
-                );
-                dot.setAttribute("cx", String(point.x));
-                dot.setAttribute("cy", String(point.y));
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", String(pt.x));
+                dot.setAttribute("cy", String(pt.y));
                 dot.setAttribute("r", "2.5");
                 dot.setAttribute("fill", GOLD);
                 dot.style.opacity = "0.6";
@@ -1368,38 +1443,33 @@ function WavyProcessColumn({ steps }) {
                 trailDots.push(dot);
                 if (trailDots.length > 20) trailDots.shift().remove();
             }
-
-            trailDots.forEach((dot, index) => {
-                dot.style.opacity = (
-                    (0.55 * (index + 1)) /
-                    trailDots.length
-                ).toFixed(2);
+            trailDots.forEach((d, i) => {
+                d.style.opacity = ((0.55 * (i + 1)) / trailDots.length).toFixed(2);
             });
 
-            stopFracs.forEach((fraction, index) => {
-                if (!hitStops[index] && progress >= fraction - 0.005) {
-                    hitStops[index] = true;
-                    const circle = nodeRefs.current[index];
-                    const label = labelRefs.current[index];
-                    const isLast = index === steps.length - 1;
+            stopFracs.forEach((frac, i) => {
+                if (!hitStops[i] && progress >= frac - 0.005) {
+                    hitStops[i] = true;
+                    const circle = nodeRefs.current[i];
+                    const label = labelRefs.current[i];
+                    const isLast = i === steps.length - 1;
                     if (circle) {
                         circle.style.transition = "fill 0.2s";
                         circle.style.fill = isLast ? "#e8c878" : GOLD;
                     }
                     if (label) {
-                        label.style.transition = "fill 0.35s";
-                        label.style.fill = isLast ? "#e8c878" : GOLD;
+                        label.style.transition = "color 0.35s";
+                        label.style.color = isLast ? "#e8c878" : GOLD;
                     }
-                    const photo = photoRefs.current[index];
+                    const photo = photoRefs.current[i];
                     if (photo) {
                         photo.style.transition = "opacity 0.5s ease";
                         photo.style.opacity = "1";
                     }
-                    pulseRing(index);
+                    pulseRing(i);
                 }
             });
-
-            if (progress < 1) rafId = requestAnimationFrame(animate);
+            if (progress < 1) rafId = requestAnimationFrame(step);
         }
 
         function run() {
@@ -1407,7 +1477,7 @@ function WavyProcessColumn({ steps }) {
             resetVisuals();
             startTime = null;
             pulsePhase = 0;
-            rafId = requestAnimationFrame(animate);
+            rafId = requestAnimationFrame(step);
         }
 
         const stopAndReset = () => {
@@ -1416,7 +1486,7 @@ function WavyProcessColumn({ steps }) {
         };
 
         const replayTrigger = ScrollTrigger.create({
-            trigger: trackPath,
+            trigger: root,
             start: "top 80%",
             end: "bottom 20%",
             onEnter: run,
@@ -1425,31 +1495,98 @@ function WavyProcessColumn({ steps }) {
             onLeaveBack: stopAndReset,
         });
 
+        if (replayTrigger.isActive) run();
+
         return () => {
             cancelAnimationFrame(rafId);
             replayTrigger.kill();
         };
-    }, [steps.length]);
+    }, [geom, steps.length]);
+
+    const path = verticalWavePath(geom.points);
 
     return (
-        <div className="space-y-10">
-            {steps.map((step, index) => (
-                <div key={step.title}>
-                    <p className="font-canva text-[15px] font-medium tracking-[0.08em] text-white">{String(index + 1).padStart(2, "0")}</p>
-                    <h3 className="mt-1 font-canva text-sm font-bold uppercase tracking-[0.14em] text-white">
-                        {step.title}
-                    </h3>
-                    <div className="mt-4 max-w-[280px]">
-                        <ApproachStepPhoto
-                            step={step}
-                            photoRef={(el) => (photoRefs.current[index] = el)}
-                        />
+        <div ref={rootRef} className="relative">
+            {geom.h > 0 && path ? (
+                <svg
+                    className="pointer-events-none absolute left-0 top-0 overflow-visible"
+                    width="40"
+                    height={geom.h}
+                    viewBox={`0 0 40 ${geom.h}`}
+                    aria-hidden="true"
+                >
+                    <path d={path} fill="none" stroke="#7a7a7a" strokeWidth="1.4" />
+                    <path ref={trackRef} d={path} fill="none" stroke="transparent" strokeWidth="1.4" />
+                    {geom.points.map((p, i) => {
+                        const isEnd = i === 0 || i === geom.points.length - 1;
+                        return (
+                            <g key={i}>
+                                <circle
+                                    ref={(el) => (ringRefs.current[i] = el)}
+                                    cx={p.x}
+                                    cy={p.y}
+                                    r="6.5"
+                                    fill="none"
+                                    stroke={COPPER}
+                                    strokeWidth="1.4"
+                                    opacity="0"
+                                />
+                                <circle
+                                    ref={(el) => (nodeRefs.current[i] = el)}
+                                    cx={p.x}
+                                    cy={p.y}
+                                    r="6.5"
+                                    fill="#ffffff"
+                                    stroke={isEnd ? COPPER : "none"}
+                                    strokeWidth={isEnd ? 2.2 : 0}
+                                />
+                            </g>
+                        );
+                    })}
+                    <g ref={trailRef} />
+                    <circle
+                        ref={travelerRef}
+                        cx={geom.points[0].x}
+                        cy={geom.points[0].y}
+                        r="4"
+                        fill="#c48a6a"
+                    />
+                </svg>
+            ) : null}
+
+            <div className="flex flex-col gap-6 pl-11">
+                {steps.map((step, index) => (
+                    <div
+                        key={step.title}
+                        ref={(el) => (itemRefs.current[index] = el)}
+                        className="flex items-start gap-3"
+                    >
+                        <div className="w-[108px] shrink-0 sm:w-[120px]">
+                            <ApproachStepPhoto
+                                step={step}
+                                compact
+                                photoRef={(el) => (photoRefs.current[index] = el)}
+                            />
+                        </div>
+                        <div className="min-w-0 pt-0.5">
+                            <div
+                                ref={(el) => (labelRefs.current[index] = el)}
+                                className="text-white transition-colors duration-300"
+                            >
+                                <p className="font-canva text-[12px] font-medium tracking-[0.08em]">
+                                    {String(index + 1).padStart(2, "0")}
+                                </p>
+                                <h3 className="mt-0.5 font-canva text-[11px] font-bold uppercase tracking-[0.12em]">
+                                    {step.title}
+                                </h3>
+                            </div>
+                            <p className="mt-1.5 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] leading-[1.4] text-white/85">
+                                {step.copy}
+                            </p>
+                        </div>
                     </div>
-                    <p className="mt-3 max-w-[280px] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] leading-[1.5] text-white">
-                        {step.copy}
-                    </p>
-                </div>
-            ))}
+                ))}
+            </div>
         </div>
     );
 }
@@ -1543,7 +1680,8 @@ function CaseStudySpotlight() {
 
     return (
         <section
-            className="font-canva relative overflow-hidden py-16 pb-24 text-[#2A2A2A] md:py-24 md:pb-32"
+            data-nav-light
+            className="font-canva relative overflow-hidden pt-6 pb-24 text-[#2A2A2A] md:pt-8 md:pb-32"
             style={{
                 fontFamily: '"Canva Sans", sans-serif',
                 background: "#f3efea",
@@ -1616,7 +1754,7 @@ function CaseStudySpotlight() {
                     <div className="mt-8 flex justify-end md:mt-10">
                         <a
                             href="#projects"
-                            className="case-study-cta group relative inline-flex min-w-max shrink-0 items-center gap-3 overflow-hidden whitespace-nowrap bg-[#6B6E5F] px-5 py-3.5 font-canva text-[10px] font-bold uppercase tracking-[0.14em] text-white"
+                            className="case-study-cta group relative inline-flex max-w-full items-center gap-3 overflow-hidden bg-[#6B6E5F] px-4 py-3.5 font-canva text-[10px] font-bold uppercase tracking-[0.12em] text-white sm:px-5 sm:tracking-[0.14em]"
                         >
                             <span
                                 aria-hidden="true"
@@ -1665,6 +1803,7 @@ function RecognitionSection() {
 
     return (
         <section
+            data-nav-light
             className="font-canva relative overflow-visible bg-[#f3efea] py-16 text-[#1A1A1A] md:py-24 [&_*]:[font-family:'Canva_Sans',sans-serif]"
             style={{ fontFamily: '"Canva Sans", sans-serif' }}
         >
@@ -1841,10 +1980,10 @@ function CountUpStat({ value, line1, line2 }) {
     }, [suffix, target, value]);
 
     return (
-        <div ref={rootRef} className="min-w-[118px] lg:min-w-[140px]">
+        <div ref={rootRef} className="min-w-0 sm:min-w-[90px] lg:min-w-[140px]">
             <p
                 ref={numRef}
-                className="text-[32px] font-bold leading-none text-white lg:text-[40px]"
+                className="text-[26px] font-bold leading-none text-white sm:text-[32px] lg:text-[40px]"
             >
                 0{suffix}
             </p>
@@ -1877,12 +2016,12 @@ function TestimonialsSection() {
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#2a2a2a] from-0% via-[#2a2a2a] via-[38%] to-[#2a2a2a]/25" />
 
-            <div className="relative mx-auto flex min-h-[100svh] max-w-[1240px] flex-col justify-center px-6 py-16 md:px-10 lg:py-20">
+            <div className="relative mx-auto flex min-h-[100svh] max-w-[1240px] flex-col justify-center px-5 py-24 sm:px-6 md:px-10 lg:py-20">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-white">
                     What clients say
                 </p>
 
-                <h2 className="mt-4 font-canva text-[clamp(2.35rem,5vw,4.15rem)] font-semibold italic leading-[1.08] tracking-[-0.01em]">
+                <h2 className="mt-4 font-canva text-[clamp(1.85rem,8vw,4.15rem)] font-semibold italic leading-[1.08] tracking-[-0.01em]">
                     <span className="block text-white">The Right People</span>
                     <span className="block" style={{ color: "#a1573c" }}>
                         Recognise the Work
@@ -1895,7 +2034,7 @@ function TestimonialsSection() {
                             key={`${t.name}-${index}-${i}`}
                             className={`grid min-h-[240px] overflow-hidden md:grid-cols-[1.12fr_0.88fr] md:min-h-[268px] ${
                                 i === 0
-                                    ? "border border-[#a1573c] bg-[#383838]"
+                                    ? "border border-[#a1573c] bg-[#F2EDE7]"
                                     : "bg-[#424242]"
                             }`}
                         >
@@ -1915,15 +2054,27 @@ function TestimonialsSection() {
                                     &ldquo;
                                 </span>
 
-                                <p className="mt-1 whitespace-pre-line font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] italic leading-[1.5] text-white">
+                                <p
+                                    className={`mt-1 whitespace-pre-line font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] italic leading-[1.5] ${
+                                        i === 0 ? "text-[#2A2A2A]" : "text-white"
+                                    }`}
+                                >
                                     {t.quote}
                                 </p>
 
                                 <div className="mt-auto pt-6">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white">
+                                    <p
+                                        className={`text-[11px] font-semibold uppercase tracking-[0.14em] ${
+                                            i === 0 ? "text-[#2A2A2A]" : "text-white"
+                                        }`}
+                                    >
                                         {t.name}
                                     </p>
-                                    <p className="mt-1 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[10px] uppercase tracking-[0.14em] text-white/80">
+                                    <p
+                                        className={`mt-1 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[10px] uppercase tracking-[0.14em] ${
+                                            i === 0 ? "text-[#2A2A2A]/70" : "text-white/80"
+                                        }`}
+                                    >
                                         {t.detail}
                                     </p>
                                 </div>
@@ -1941,14 +2092,14 @@ function TestimonialsSection() {
                     ))}
                 </div>
 
-                <div className="mt-10 flex w-full items-center md:mt-12">
+                <div className="mt-10 flex w-full flex-col gap-8 sm:flex-row sm:flex-wrap sm:items-center md:mt-12">
                     <span className="hidden h-px w-[140px] shrink-0 bg-white lg:block lg:w-[180px]" />
 
-                    <div className="flex items-center md:ml-8 lg:ml-10">
+                    <div className="flex min-w-0 flex-wrap items-start gap-y-6 sm:items-center md:ml-8 lg:ml-10">
                         {TESTIMONIAL_STATS.map((stat, i) => (
                             <div key={stat.value} className="flex items-center">
                                 {i > 0 ? (
-                                    <span className="mx-5 h-[52px] w-px shrink-0 bg-white md:mx-8 lg:mx-10" />
+                                    <span className="mx-4 h-[52px] w-px shrink-0 bg-white sm:mx-5 md:mx-8 lg:mx-10" />
                                 ) : null}
                                 <CountUpStat
                                     value={stat.value}
@@ -1959,7 +2110,7 @@ function TestimonialsSection() {
                         ))}
                     </div>
 
-                    <div className="ml-auto flex shrink-0 items-center gap-10">
+                    <div className="flex shrink-0 items-center gap-6 sm:ml-auto sm:gap-10">
                         <button
                             type="button"
                             onClick={prev}
@@ -2005,6 +2156,108 @@ function TestimonialsSection() {
                             </svg>
                         </button>
                     </div>
+                </div>
+            </div>
+        </section>
+    );
+}
+
+function FaqsSection() {
+    const [openIndex, setOpenIndex] = useState(0);
+
+    return (
+        <section
+            id="faqs"
+            className="font-canva relative overflow-hidden bg-[#F2EDE7] pt-16 pb-28 text-[#2A2A2A] md:pt-24 md:pb-36 lg:pt-28 lg:pb-40"
+        >
+            <div
+                data-nav-light
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 top-0 bottom-36 md:bottom-44"
+            />
+            <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-36 md:h-44"
+                style={{
+                    background:
+                        "linear-gradient(180deg, #f2ede7 0%, #f2ede7 42%, #131313 100%)",
+                }}
+            />
+            <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 md:px-10 lg:grid-cols-[minmax(240px,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-16">
+                <div className="lg:sticky lg:top-28">
+                    <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-[#a1573c] md:text-[12px]">
+                        Questions
+                    </p>
+                    <h2 className="mt-4 font-canva text-[clamp(2.4rem,5.4vw,4.2rem)] font-semibold uppercase leading-[0.86] tracking-[-0.03em]">
+                        FAQs
+                    </h2>
+                    <p className="mt-5 max-w-sm font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[14px] leading-7 text-[#2A2A2A]/70 md:text-[15px]">
+                        Practical answers about working with Design Diaries — location,
+                        process, site visits, and how a project gets built.
+                    </p>
+                    <a
+                        href="#start-project"
+                        className="mt-8 inline-flex cursor-pointer items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#a1573c] transition-opacity hover:opacity-70"
+                    >
+                        Start a project
+                        <span className="h-px w-10 bg-current" />
+                    </a>
+                </div>
+
+                <div className="divide-y divide-[#2A2A2A]/12 border-y border-[#2A2A2A]/12">
+                    {FAQS.map((item, index) => {
+                        const isOpen = openIndex === index;
+                        return (
+                            <div
+                                key={item.q}
+                                className={`cursor-pointer transition-colors duration-300 ${
+                                    isOpen ? "bg-white/45" : "hover:bg-white/30"
+                                }`}
+                            >
+                                <button
+                                    type="button"
+                                    onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                                    aria-expanded={isOpen}
+                                    className="flex w-full cursor-pointer items-center gap-3 px-3 py-4 text-left sm:gap-4 sm:px-4 md:gap-6 md:px-6 md:py-6"
+                                >
+                                    <span
+                                        className={`w-8 shrink-0 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] tracking-[0.16em] ${
+                                            isOpen ? "text-[#a1573c]" : "text-[#2A2A2A]/35"
+                                        }`}
+                                    >
+                                        {String(index + 1).padStart(2, "0")}
+                                    </span>
+                                    <span
+                                        className={`min-w-0 flex-1 break-words font-canva text-[15px] font-medium leading-snug md:text-[19px] ${
+                                            isOpen ? "text-[#a1573c]" : "text-[#2A2A2A]"
+                                        }`}
+                                    >
+                                        {item.q}
+                                    </span>
+                                    <span
+                                        className={`flex h-9 w-9 shrink-0 items-center justify-center border text-[20px] leading-none transition-colors duration-300 ${
+                                            isOpen
+                                                ? "border-[#a1573c] text-[#a1573c]"
+                                                : "border-[#2A2A2A]/20 text-[#2A2A2A]/45"
+                                        }`}
+                                        aria-hidden="true"
+                                    >
+                                        {isOpen ? "–" : "+"}
+                                    </span>
+                                </button>
+                                <div
+                                    className="grid transition-[grid-template-rows] duration-300 ease-out"
+                                    style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+                                >
+                                    <div className="overflow-hidden">
+                                        <p className="px-4 pb-6 pl-16 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[14px] leading-7 text-[#2A2A2A]/75 md:px-6 md:pb-7 md:pl-[5.5rem] md:text-[15px] md:leading-8">
+                                            {item.a}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
         </section>
@@ -2429,12 +2682,12 @@ export default function Home() {
                 <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.2)_0%,rgba(0,0,0,0.72)_100%)]" />
 
                 {/* Content — lower-middle, inset from left like the reference */}
-                <div className="relative z-10 flex min-h-[100svh] items-end justify-center px-6 pb-12 pt-28 sm:px-10 sm:pb-14 md:px-16 md:pb-16 lg:px-24 lg:pb-[72px]">
-                    <div className="w-fit max-w-full -translate-x-6 text-left sm:-translate-x-8 md:-translate-x-12 lg:-translate-x-16">
+                <div className="relative z-10 flex min-h-[100svh] items-end justify-center px-5 pb-10 pt-24 sm:px-10 sm:pb-14 md:px-16 md:pb-16 lg:px-24 lg:pb-[72px]">
+                    <div className="w-full max-w-[920px] text-left sm:w-fit sm:-translate-x-8 md:-translate-x-12 lg:-translate-x-16">
                         <div className="overflow-hidden">
                             <h1
                                 data-hero-word
-                                className="m-0 font-canva text-[clamp(26px,3.85vw,52px)] font-bold uppercase leading-[1.2] tracking-[-0.01em] text-white sm:whitespace-nowrap"
+                                className="m-0 font-canva text-[clamp(28px,8vw,52px)] font-bold uppercase leading-[1.15] tracking-[-0.01em] text-white lg:whitespace-nowrap"
                             >
                                 GYMS, DESIGNED TO PERFORM
                             </h1>
@@ -2442,18 +2695,18 @@ export default function Home() {
 
                         <p
                             data-hero-sub
-                            className="m-0 mt-[16px] max-w-[28rem] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(14px,1.15vw,18px)] font-normal leading-[1.55] text-white"
+                            className="m-0 mt-4 max-w-[28rem] font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[clamp(14px,3.5vw,18px)] font-normal leading-[1.55] text-white sm:mt-[16px]"
                         >
                             Gym interiors designed around movement,
-                            <br />
-                            performance and people.
+                            <br className="hidden sm:block" />
+                            {" "}performance and people.
                         </p>
 
-                        <div className="group/ctas mt-[36px] flex flex-col gap-4 sm:flex-row sm:items-stretch sm:gap-[18px]">
+                        <div className="group/ctas mt-8 flex w-full flex-col gap-3 sm:mt-[36px] sm:w-auto sm:flex-row sm:items-stretch sm:gap-[18px]">
                             <a
                                 data-hero-cta
                                 href="#start-project"
-                                className="inline-flex items-center justify-center border-2 border-transparent bg-[#a1573c] px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 group-has-[.hero-cta-work:hover]/ctas:border-white group-has-[.hero-cta-work:hover]/ctas:bg-transparent"
+                                className="inline-flex items-center justify-center border-2 border-transparent bg-[#a1573c] px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 group-has-[.hero-cta-work:hover]/ctas:border-white group-has-[.hero-cta-work:hover]/ctas:bg-transparent sm:px-10 sm:py-[14px] sm:text-[12px]"
                             >
                                 START YOUR PROJECT
                             </a>
@@ -2461,7 +2714,7 @@ export default function Home() {
                             <a
                                 data-hero-cta
                                 href="#projects"
-                                className="hero-cta-work inline-flex items-center justify-center border-2 border-white bg-transparent px-10 py-[14px] font-canva text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-transparent hover:bg-[#a1573c]"
+                                className="hero-cta-work inline-flex items-center justify-center border-2 border-white bg-transparent px-6 py-3.5 font-canva text-[11px] font-bold uppercase tracking-[0.14em] text-white transition-colors duration-300 hover:border-transparent hover:bg-[#a1573c] sm:px-10 sm:py-[14px] sm:text-[12px]"
                             >
                                 VIEW OUR WORK
                             </a>
@@ -2473,6 +2726,7 @@ export default function Home() {
             {/* 2. SELECTED GYM PROJECTS — proof */}
             <section
                 id="projects"
+                data-nav-light
                 className="font-canva relative overflow-visible bg-[#f3efea] py-16 text-[#1A1A1A] md:py-24 [&_*]:[font-family:'Canva_Sans',sans-serif]"
                 style={{ fontFamily: '"Canva Sans", sans-serif' }}
             >
@@ -2516,7 +2770,12 @@ export default function Home() {
                     background: "linear-gradient(180deg, #f3efea 0%, #f3efea 50%, #131313 100%)",
                 }}
             >
-                <div className="mx-auto max-w-7xl px-6 md:px-10">
+                <div
+                    data-nav-light
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-[52svh] w-full"
+                />
+                <div className="relative mx-auto max-w-7xl px-6 md:px-10">
                     <div
                         data-reveal-group
                         className="grid items-center gap-10 lg:grid-cols-[0.9fr_1.15fr] lg:gap-16"
@@ -2529,7 +2788,7 @@ export default function Home() {
                                 <span className="block">More than</span>
                                 <span className="mt-[0.06em] block">just</span>
                                 <span className="mt-[0.06em] block">aesthetics</span>
-                                <span className="mt-[0.06em] block">alone.</span>
+                                <span className="mt-[0.06em] block">alone</span>
                             </h2>
                         </div>
                         <div data-reveal>
@@ -2552,12 +2811,12 @@ export default function Home() {
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
                     <div data-reveal-group>
                         <div data-reveal>
-                            <h2 className="font-canva text-[clamp(1.2rem,7vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-[0.04em] whitespace-nowrap">
+                            <h2 className="font-canva text-[clamp(1.65rem,8.5vw,4.75rem)] font-bold uppercase leading-[0.95] tracking-[0.02em] sm:tracking-[0.04em]">
                                 <span className="text-white">The </span>
                                 <span style={{ color: "#a1573c" }}>Sagrika</span>
                                 <span className="text-white"> Method</span>
                             </h2>
-                            <p className="mt-6 font-canva text-[12px] font-medium uppercase tracking-[0.68em] text-[#FFFFFF] md:text-[13px]">
+                            <p className="mt-5 font-canva text-[11px] font-medium uppercase tracking-[0.28em] text-[#FFFFFF] sm:mt-6 sm:tracking-[0.5em] md:text-[13px] md:tracking-[0.68em]">
                                 From insight to impact
                             </p>
                         </div>
@@ -2567,7 +2826,7 @@ export default function Home() {
                         <div className="hidden md:block">
                             <WavyProcessRow steps={APPROACH} />
                         </div>
-                        <div className="md:hidden">
+                        <div className="overflow-visible md:hidden">
                             <WavyProcessColumn steps={APPROACH} />
                         </div>
                     </div>
@@ -2577,134 +2836,93 @@ export default function Home() {
             {/* ================= ABOUT PREVIEW ================= */}
             <section
                 id="about"
-                className="relative min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/5 bg-[#080808] py-20 text-[#F5F3EE] md:py-28"
+                className="relative isolate overflow-hidden bg-[#f2ede7] text-white"
+                style={{ minHeight: "calc(100svh + 5rem)" }}
             >
-                <a
-                    href="/about"
+                <div
+                    data-nav-light
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-24 w-full"
+                />
+                <img
+                    src="/images/about-hero.png"
+                    alt="Sagrika Saraf, lead interior designer"
+                    className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] w-full object-cover object-center"
+                />
+                <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 bottom-0 z-[5] h-28 sm:h-40 md:h-48"
+                    style={{
+                        background:
+                            "linear-gradient(180deg, rgba(90,90,90,0) 0%, #5a5a5a 28%, #797774 50%, #a9a6a2 72%, #f2ede7 90%, #f2ede7 100%)",
+                    }}
+                />
+
+                <div
                     data-reveal-group
-                    className="group block mx-auto max-w-7xl px-6 md:px-10"
-                    aria-label="Read the complete story about Sagrika and Design Diaries"
+                    className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1680px] flex-col justify-between px-5 pb-20 pt-24 sm:px-10 lg:block lg:h-[100svh] lg:px-0 lg:pb-0 lg:pt-0"
                 >
-                    <div className="grid items-center gap-12 lg:grid-cols-[1fr_0.82fr] lg:gap-20">
+                    <div
+                        data-reveal
+                        className="relative max-w-[340px] lg:absolute lg:left-[3.5%] lg:top-1/2 lg:max-w-[380px] lg:-translate-y-[58%]"
+                    >
+                        <p className="font-canva mb-3 text-[12px] font-medium uppercase tracking-[0.42em] text-white md:mb-4 md:text-[13px]">
+                            About
+                        </p>
+                        <h2 className="font-canva text-[clamp(2rem,10vw,4.65rem)] font-bold uppercase leading-[0.9] tracking-[0.01em]">
+                            <span className="block text-[#a1573c]">Sagrika</span>
+                            <span className="block text-white">Saraf</span>
+                        </h2>
+                    </div>
 
-                        {/* ================= RIGHT IMAGE — NOW FIRST / LEFT ================= */}
-                        <div data-reveal className="lg:justify-self-start">
-                            <div className="relative mx-auto w-full max-w-[500px]">
-
-                                {/* Editorial frame */}
-                                <div className="absolute -inset-2 border border-[#F5F3EE]/[0.05] transition-all duration-500 group-hover:border-[#E0C15A]/20" />
-
-                                <div className="relative aspect-[5/4] overflow-hidden bg-[#050505]">
-                                    <img
-                                        data-parallax-img
-                                        src="https://images.openai.com/static-rsc-4/LhFYuRxeqwuDBitdyS2lUsg4tnt1Kl7pRNGoKnKvk6uJixBwK56zblDwg08vEnq50rWk-7yPP_ffZn2F3cxaJqDb0i8HiMILEXmm0ClZLRFKujqvQu8TOd02y2umJ9UFCk6pgT89fZPKPChnYUmPYKp_PDF9nuy7odB_DS0aExOc9eTZaOABPF04t5K1mp4m?purpose=fullsize"
-                                        alt="Gym interior architecture with lighting and equipment"
-                                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                                        loading="lazy"
-                                    />
-
-                                    {/* Image overlay */}
-                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#050505]/60 via-transparent to-transparent" />
-
-                                    {/* Corner details */}
-                                    <span className="absolute left-4 top-4 h-6 w-6 border-l border-t border-[#E0C15A]/70" />
-                                    <span className="absolute bottom-4 right-4 h-6 w-6 border-b border-r border-[#E0C15A]/70" />
-
-                                    {/* Image number */}
-                                    <span className="absolute bottom-4 left-4 font-mono text-[8px] tracking-[0.2em] text-[#F5F3EE]/55">
-                                        DESIGN DIARIES / 01
-                                    </span>
-
-                                    {/* Hover indicator */}
-                                    <span className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center border border-[#F5F3EE]/20 bg-[#050505]/40 backdrop-blur-sm transition-all duration-300 group-hover:border-[#E0C15A]/70 group-hover:bg-[#E0C15A]">
-                                        <svg
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            className="h-4 w-4 text-[#F5F3EE] transition-colors duration-300 group-hover:text-[#050505]"
-                                        >
-                                            <path
-                                                d="M7 17L17 7M9 7H17V15"
-                                                stroke="currentColor"
-                                                strokeWidth="1.5"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    </span>
-                                </div>
-
-                                <p className="mt-3 text-xs uppercase tracking-[0.16em] text-[#F5F3EE]/40">
-                                    Sagrika Saraf · Lead interior designer
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* ================= LEFT TEXT — NOW SECOND / RIGHT ================= */}
-                        <div data-reveal className="max-w-2xl">
-                            <div className="flex items-center gap-4 pb-4">
-                                <span className="h-px w-10 bg-[#E0C15A]" />
-                                <span className="text-[15px] font-semibold uppercase tracking-[0.28em] text-[#E0C15A]">
-                                    About Sagrika
-                                </span>
-                            </div>
-
-                            <h2 className="font-display mt-5 text-3xl uppercase leading-[0.94] tracking-[-0.02em] sm:text-4xl md:text-5xl">
-                                Sagrika, and the turn{" "}
-                                <span className="text-[#E0C15A]">
-                                    toward gyms.
-                                </span>
-                            </h2>
-
-                            <p className="font-editorial mt-6 max-w-xl text-xl leading-8 text-[#D0CEC8]">
+                    <div
+                        data-reveal
+                        className="relative mt-8 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[2%] lg:top-1/2 lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:-translate-y-[42%]"
+                    >
+                        <p className="font-arial-mt text-left text-[12px] font-normal italic leading-[1.55] text-white sm:text-[13px] sm:leading-[1.6] md:text-[13.5px] md:leading-[1.62]">
+                            <span className="block xl:whitespace-nowrap">
                                 Sagrika Saraf leads Design Diaries. Trained as an interior
-                                designer — including a Master's in Paris — she treats a
-                                room as a place people inhabit, not simply as a piece of art.
-                                A single gym project became many, and each one added to a
-                                growing understanding of how equipment, movement and daily
-                                use shape a space long before aesthetics do.
-                            </p>
-
-                            <div className="mt-8 flex items-center gap-4">
-                                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#F5F3EE]/35">
-                                    Interior · Gyms · Wellness
-                                </span>
-
-                                <span className="h-px w-10 bg-[#F5F3EE]/10 transition-all duration-500 group-hover:w-16 group-hover:bg-[#E0C15A]/50" />
-
-                                <span className="flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#F5F3EE]/50 transition-colors duration-500 group-hover:text-[#E0C15A]">
-                                    Read story
-                                    <svg
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        className="h-3 w-3 -translate-x-0.5 opacity-0 transition-all duration-500 group-hover:translate-x-0 group-hover:opacity-100"
-                                    >
-                                        <path
-                                            d="M5 12h14M13 6l6 6-6 6"
-                                            stroke="currentColor"
-                                            strokeWidth="1.5"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    </svg>
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* ================= BOTTOM LINK ================= */}
-                    <div className="mt-14 flex items-center justify-between border-t border-[#F5F3EE]/10 pt-5">
-                        <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-[#F5F3EE]/25">
-                            Design Diaries / About
-                        </span>
-
-                        <span className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#E0C15A]">
-                            Explore the full story
-                            <span className="inline-flex transition-transform duration-300 group-hover:translate-x-1">
-                                →
                             </span>
-                        </span>
+                            <span className="block xl:whitespace-nowrap">
+                                designer - including a Master's in Paris - she treats a room as
+                            </span>
+                            <span className="block xl:whitespace-nowrap">
+                                a place people inhabit, not simply as a piece of art. A single
+                            </span>
+                            <span className="block xl:whitespace-nowrap">
+                                gym project became many, and each one added to a growing
+                            </span>
+                            <span className="block xl:whitespace-nowrap">
+                                understanding of how equipment, movement and daily use
+                            </span>
+                            <span className="block xl:whitespace-nowrap">
+                                shape a space long before aesthetics do.
+                            </span>
+                        </p>
+
+                        <a
+                            href="/about"
+                            className="font-arial-mt group mt-7 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-[#a1573c] transition-opacity duration-300 hover:opacity-80 md:mt-8"
+                            aria-label="Read the complete story about Sagrika and Design Diaries"
+                        >
+                            Read full story
+                            <svg
+                                viewBox="0 0 96 10"
+                                className="h-[9px] w-[76px] overflow-visible md:w-[92px]"
+                                fill="none"
+                                aria-hidden="true"
+                            >
+                                <path
+                                    d="M0 5H90M86 1.4L93.5 5 86 8.6"
+                                    stroke="currentColor"
+                                    strokeWidth="1.1"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                />
+                            </svg>
+                        </a>
                     </div>
-                </a>
+                </div>
             </section>
 
             <CaseStudySpotlight />
@@ -2712,6 +2930,8 @@ export default function Home() {
             <RecognitionSection />
 
             <TestimonialsSection />
+
+            <FaqsSection />
 
         </main>
     );

@@ -82,20 +82,14 @@ function WhatsAppMark() {
 export default function Footer() {
     return (
         <footer className="font-canva bg-[#0e0e0e] text-white">
-            <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-14 px-8 py-[72px] md:grid-cols-[1.35fr_0.85fr_1.15fr] md:gap-x-8 md:px-12 lg:gap-x-10 lg:py-24">
+            <div className="mx-auto grid max-w-[1240px] grid-cols-1 items-start gap-14 px-5 py-16 sm:px-8 md:grid-cols-[1.35fr_0.85fr_1.15fr] md:gap-x-8 md:px-12 lg:gap-x-10 lg:py-24">
                 <div className="max-w-[320px]">
                     <a href="#home" className="inline-block font-canva text-[42px] font-bold uppercase leading-none tracking-[0.06em] text-white">
                         Logo
                     </a>
 
                     <p className="mt-6 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[13px] leading-[1.7] text-white">
-                        Specialist interior design for gyms and
-                        <br />
-                        wellness spaces - built around how
-                        <br />
-                        people use them and how businesses
-                        <br />
-                        run them.
+                        Specialist interior design for gyms and wellness spaces - built around how people use them and how businesses run them.
                     </p>
 
                     <span className="mt-6 block h-[2px] w-12 bg-white" />
