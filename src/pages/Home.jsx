@@ -1206,11 +1206,10 @@ function WavyProcessRow({ steps }) {
                     hitStops[i] = true;
                     const circle = nodeRefs.current[i];
                     const label = labelRefs.current[i];
-                    const isLast = i === steps.length - 1;
-                    if (circle) { circle.style.transition = "fill 0.2s"; circle.style.fill = isLast ? "#e8c878" : GOLD; }
+                    if (circle) { circle.style.transition = "fill 0.2s"; circle.style.fill = GOLD; }
                     if (label) {
                         label.style.transition = "color 0.35s, opacity 0.5s ease";
-                        label.style.color = isLast ? "#e8c878" : GOLD;
+                        label.style.color = GOLD;
                         label.style.opacity = "1";
                     }
                     const photo = photoRefs.current[i];
@@ -1471,14 +1470,13 @@ function WavyProcessColumn({ steps }) {
                     hitStops[i] = true;
                     const circle = nodeRefs.current[i];
                     const label = labelRefs.current[i];
-                    const isLast = i === steps.length - 1;
                     if (circle) {
                         circle.style.transition = "fill 0.2s";
-                        circle.style.fill = isLast ? "#e8c878" : GOLD;
+                        circle.style.fill = GOLD;
                     }
                     if (label) {
                         label.style.transition = "color 0.35s";
-                        label.style.color = isLast ? "#e8c878" : GOLD;
+                        label.style.color = GOLD;
                     }
                     const photo = photoRefs.current[i];
                     if (photo) {
@@ -2831,8 +2829,7 @@ export default function Home() {
             {/* ================= ABOUT PREVIEW ================= */}
             <section
                 id="about"
-                className="relative isolate overflow-hidden bg-[#f2ede7] text-white"
-                style={{ minHeight: "calc(100svh + 5rem)" }}
+                className="relative isolate overflow-hidden bg-[#f2ede7] text-white min-h-[100svh] lg:min-h-[calc(100svh+5rem)]"
             >
                 <div
                     data-nav-light
@@ -2843,12 +2840,13 @@ export default function Home() {
                     src="/images/about.png"
                     alt=""
                     aria-hidden="true"
-                    className="pointer-events-none absolute inset-x-0 top-0 h-[100svh] w-full object-cover object-center"
+                    className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover object-center"
                 />
                 <img
                     src="/images/aboutsagrika.png?v=3"
-                    alt="Sagrika Saraf, lead interior designer"
-                    className="pointer-events-none absolute inset-x-0 z-[2] mx-auto w-auto object-contain top-[11.5rem] h-[62svh] max-w-[min(88vw,400px)] object-top lg:top-0 lg:h-[100svh] lg:max-w-[min(92vw,640px)] lg:object-bottom"
+                    alt=""
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-x-0 top-0 z-[2] mx-auto hidden h-[100svh] w-auto max-w-[min(92vw,640px)] object-contain object-bottom lg:block"
                 />
                 <div
                     aria-hidden="true"
@@ -2861,7 +2859,7 @@ export default function Home() {
 
                 <div
                     data-reveal-group
-                    className="relative z-10 mx-auto flex min-h-[100svh] max-w-[1680px] flex-col justify-between px-5 pb-20 pt-24 sm:px-10 lg:block lg:h-[100svh] lg:px-0 lg:pb-0 lg:pt-0"
+                    className="relative z-10 mx-auto flex max-w-[1680px] flex-col px-5 pb-16 pt-24 sm:px-10 lg:block lg:h-[100svh] lg:px-0 lg:pb-0 lg:pt-0"
                 >
                     <div
                         data-reveal
@@ -2876,9 +2874,15 @@ export default function Home() {
                         </h2>
                     </div>
 
+                    <img
+                        src="/images/aboutsagrika.png?v=3"
+                        alt="Sagrika Saraf, lead interior designer"
+                        className="relative z-[2] mx-auto mt-10 mb-8 h-auto w-[min(82vw,360px)] object-contain lg:hidden"
+                    />
+
                     <div
                         data-reveal
-                        className="relative mt-8 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[1%] lg:top-[20%] lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:translate-y-0"
+                        className="relative mt-2 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[1%] lg:top-[20%] lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:translate-y-0"
                     >
                         <p className="font-arial-mt text-left text-[12px] font-normal italic leading-[1.55] text-white sm:text-[13px] sm:leading-[1.6] md:text-[13.5px] md:leading-[1.62]">
                             <span className="block xl:whitespace-nowrap">
