@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ArrowRight } from "lucide-react";
 import Logo from "./Logo";
 
 // Per website strategy doc: "Top navigation: Logo | Projects | Services | About | Contact"
@@ -175,13 +176,17 @@ export default function Navbar() {
                     <div className="hidden shrink-0 pl-16 lg:block lg:pl-20">
                         <a
                             href="#start-project"
-                            className={`relative inline-flex items-center px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
+                            className={`group relative inline-flex items-center px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
                                 darkChrome
-                                    ? "bg-[#1A1A1A] text-white hover:bg-[#a1573c] hover:text-white"
-                                    : "bg-white text-black hover:bg-[#a1573c] hover:text-white"
+                                    ? "bg-[#1A1A1A] text-white hover:bg-zinc-600 hover:text-white"
+                                    : "bg-white text-black hover:bg-zinc-300 hover:text-black"
                             }`}
                         >
                             Start a Project
+                            <ArrowRight
+                                className="ml-0 h-4 w-4 max-w-0 -translate-x-1 opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:max-w-4 group-hover:translate-x-0 group-hover:opacity-100"
+                                strokeWidth={2.4}
+                            />
                         </a>
                     </div>
 
@@ -236,9 +241,13 @@ export default function Navbar() {
                     href="#start-project"
                     data-menu-link
                     onClick={() => setMenuOpen(false)}
-                    className="relative mt-10 inline-flex items-center justify-center bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors duration-300 hover:bg-[#a1573c] hover:text-white"
+                    className="group relative mt-10 inline-flex items-center justify-center bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors duration-300 hover:bg-zinc-300"
                 >
                     Start a Project
+                    <ArrowRight
+                        className="ml-0 h-4 w-4 max-w-0 -translate-x-1 opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:max-w-4 group-hover:translate-x-0 group-hover:opacity-100"
+                        strokeWidth={2.4}
+                    />
                 </a>
                 <p data-menu-link className="mt-auto mb-10 text-xs uppercase tracking-[0.2em] text-[#8F8F8F]">
                     Design Diaries · Gym &amp; Wellness Interiors

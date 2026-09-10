@@ -112,7 +112,7 @@ const TESTIMONIALS = [
 ];
 
 const TESTIMONIAL_STATS = [
-    { value: "50+", line1: "Projects", line2: "Delivered" },
+    { value: "15+", line1: "Projects", line2: "Delivered" },
     { value: "2x", line1: "Business Growth", line2: "for Clients" },
     { value: "100%", line1: "Function-First", line2: "Design Approach" },
 ];
@@ -120,45 +120,6 @@ const TESTIMONIAL_STATS = [
 const TESTIMONIAL_BG =
     "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=2400&q=80";
 const TESTIMONIAL_ACCENT = "#a1573c";
-
-const FAQS = [
-    {
-        q: "Where are you based out of?",
-        a: "Delhi, available for meetings on appointment.",
-    },
-    {
-        q: "Do you provide turn-key solutions?",
-        a: "No, we provide designs.",
-    },
-    {
-        q: "Is your service available pan India?",
-        a: "Yes, we do provide interior design consultation pan India.",
-    },
-    {
-        q: "Do you visit the site?",
-        a: "Yes, we do visit the site as per requirements. Charges vary from project to project.",
-    },
-    {
-        q: "Can I get 2-3 options for design?",
-        a: "The design is completely customised as per your requirements and site. A few changes are possible, but multiple options are not provided.",
-    },
-    {
-        q: "Can I get only 3D views?",
-        a: "3D views are the end product of the design. They cannot be treated separately. We do provide 3D views as a part of our complete service.",
-    },
-    {
-        q: "How will I execute on site on my own?",
-        a: "We provide detailed lists of materials, drawings, technical support on call, and guidance during the execution phase. We are available on WhatsApp every day for queries to make the execution process smooth.",
-    },
-    {
-        q: "Will I find the materials you use in the design locally?",
-        a: "Yes, we do provide support with vendors and exact codes for all the materials required. For example, if there is a light to be bought, we'll mention wattage, colour body, temperature, brand if applicable, and a link to this product for purchase online.",
-    },
-    {
-        q: "How much time will it take for designing?",
-        a: "The time frame is between 20–40 days depending on the scope of work.",
-    },
-];
 
 const INSIGHTS = [
     {
@@ -1794,19 +1755,19 @@ function CaseStudySpotlight() {
 
 const RISING_STAR_PHOTOS = [
     {
-        src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=500&q=80",
+        src: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&crop=faces&w=1400&h=960&q=80",
         alt: "Young leader portrait",
     },
     {
-        src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=500&q=80",
+        src: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&crop=faces&w=1400&h=960&q=80",
         alt: "Professional portrait",
     },
     {
-        src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=500&q=80",
+        src: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&crop=faces&w=1400&h=960&q=80",
         alt: "Industry leader portrait",
     },
     {
-        src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=500&q=80",
+        src: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&crop=faces&w=1400&h=960&q=80",
         alt: "Designer portrait",
     },
 ];
@@ -1814,10 +1775,54 @@ const RISING_STAR_PHOTOS = [
 const AWARD_PHOTO =
     "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80";
 
+const WOW_AWARD_PHOTOS = [
+    {
+        src: AWARD_PHOTO,
+        alt: "Architect's Wow Award 2024 venue",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1000&q=80",
+        alt: "Award-winning gym interior",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?auto=format&fit=crop&w=1000&q=80",
+        alt: "Fitness space recognised at Architect's Wow Awards",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1571902943202-507ec2618e8f?auto=format&fit=crop&w=1000&q=80",
+        alt: "Training floor from the awarded project",
+    },
+];
+
+const IDAC_PHOTOS = [
+    {
+        src: AWARD_PHOTO,
+        alt: "IDAC Expo Delhi",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=1000&q=80",
+        alt: "Published gym interior at IDAC Expo",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1576678927484-e1441cdab4ed?auto=format&fit=crop&w=1000&q=80",
+        alt: "Wellness space featured at IDAC Expo",
+    },
+    {
+        src: "https://images.unsplash.com/photo-1558611848-73f7eb4001a1?auto=format&fit=crop&w=1000&q=80",
+        alt: "Fitness floor from IDAC Expo publication",
+    },
+];
+
 function RecognitionSection() {
     const [slide, setSlide] = useState(0);
+    const [awardSlide, setAwardSlide] = useState(0);
+    const [expoSlide, setExpoSlide] = useState(0);
     const count = RISING_STAR_PHOTOS.length;
-    const visible = [0, 1, 2].map((offset) => RISING_STAR_PHOTOS[(slide + offset) % count]);
+    const awardCount = WOW_AWARD_PHOTOS.length;
+    const expoCount = IDAC_PHOTOS.length;
+    const starPhoto = RISING_STAR_PHOTOS[slide];
+    const awardPhoto = WOW_AWARD_PHOTOS[awardSlide];
+    const expoPhoto = IDAC_PHOTOS[expoSlide];
 
     return (
         <section
@@ -1837,112 +1842,102 @@ function RecognitionSection() {
                 </div>
 
                 <div className="mt-12 grid grid-cols-1 gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
-                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
+                    <article className="group overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:bg-[#1A1A1A] hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
                         <div className="relative aspect-[16/11] overflow-hidden bg-[#1A1A1A]">
                             <img
-                                src={AWARD_PHOTO}
-                                alt="Architects Wow Awards 2024"
-                                className="h-full w-full object-cover brightness-[0.72]"
+                                src={awardPhoto.src}
+                                alt={awardPhoto.alt}
+                                className="h-full w-full object-cover brightness-[0.72] transition-opacity duration-300"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
-                            <span className="absolute bottom-4 left-4 cursor-pointer text-white">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                            <button
+                                type="button"
+                                aria-label="Previous award photo"
+                                onClick={() => setAwardSlide((s) => (s - 1 + awardCount) % awardCount)}
+                                className="absolute left-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
+                            >
+                                <ArrowRight className="h-6 w-6 rotate-180" strokeWidth={2.6} />
+                            </button>
+                            <button
+                                type="button"
+                                aria-label="Next award photo"
+                                onClick={() => setAwardSlide((s) => (s + 1) % awardCount)}
+                                className="absolute right-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
+                            >
                                 <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
-                            </span>
+                            </button>
                         </div>
-                        <div className="flex items-center gap-3 px-4 py-4">
-                            <span className="font-canva text-[12px] font-medium text-[#1A1A1A]">01</span>
-                            <span className="h-px flex-1 bg-[#1A1A1A]/25" />
-                            <h3 className="font-canva text-[11px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A]">
+                        <div className="px-4 py-5">
+                            <h3 className="text-center font-canva text-[13px] font-bold uppercase tracking-[0.1em] text-[#1A1A1A] transition-colors duration-300 group-hover:text-white md:text-[14px]">
                                 Architect&apos;s Wow Award 2024
                             </h3>
                         </div>
                     </article>
 
-                    <article className="flex flex-col overflow-hidden rounded-[10px] bg-[#1C1C1C] text-white transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.45)]">
-                        <div className="flex items-start justify-between gap-4 px-4 pt-4">
-                            <p className="font-canva text-[9px] uppercase tracking-[0.14em] text-white/85">
-                                Delhi&apos;s Rising Star 2024
-                            </p>
-                            <p className="max-w-[140px] text-right font-canva text-[8px] uppercase tracking-[0.12em] text-white/70">
-                                Young leaders shaping a better tomorrow
-                            </p>
-                        </div>
-                        <div className="relative mt-5 flex-1 px-8 pb-2">
+                    <article className="group overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:bg-[#1A1A1A] hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
+                        <div className="relative aspect-[16/11] overflow-hidden bg-[#1A1A1A]">
+                            <img
+                                src={starPhoto.src}
+                                alt={starPhoto.alt}
+                                className="h-full w-full object-cover object-[center_18%] brightness-[0.92] transition-opacity duration-300"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
                             <button
                                 type="button"
-                                aria-label="Previous highlights"
+                                aria-label="Previous rising star photo"
                                 onClick={() => setSlide((s) => (s - 1 + count) % count)}
-                                className="absolute left-2 top-1/2 z-[1] -translate-y-1/2 cursor-pointer text-white"
+                                className="absolute left-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
                             >
                                 <ArrowRight className="h-6 w-6 rotate-180" strokeWidth={2.6} />
                             </button>
-                            <div className="grid grid-cols-3 gap-2">
-                                {visible.map((photo) => (
-                                    <img
-                                        key={`${photo.src}-${slide}`}
-                                        src={photo.src}
-                                        alt={photo.alt}
-                                        className="aspect-[3/4] w-full object-cover"
-                                    />
-                                ))}
-                            </div>
                             <button
                                 type="button"
-                                aria-label="Next highlights"
+                                aria-label="Next rising star photo"
                                 onClick={() => setSlide((s) => (s + 1) % count)}
-                                className="absolute right-2 top-1/2 z-[1] -translate-y-1/2 cursor-pointer text-white"
+                                className="absolute right-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
                             >
                                 <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
                             </button>
                         </div>
-                        <div className="mt-3 flex justify-center gap-1.5 pb-3">
-                            {RISING_STAR_PHOTOS.map((_, i) => (
-                                <button
-                                    key={i}
-                                    type="button"
-                                    aria-label={`Go to slide ${i + 1}`}
-                                    onClick={() => setSlide(i)}
-                                    className={
-                                        i === slide
-                                            ? "h-px w-4 bg-white"
-                                            : "h-1.5 w-1.5 rounded-full bg-white/40"
-                                    }
-                                />
-                            ))}
-                        </div>
-                        <div className="mt-auto flex items-center gap-3 border-t border-white/10 px-4 py-4">
-                            <span className="font-canva text-[12px] font-medium">02</span>
-                            <span className="h-px flex-1 bg-white/25" />
-                            <span className="inline-flex cursor-pointer items-center gap-2 font-canva text-[10px] font-bold uppercase tracking-[0.12em]">
-                                View highlights
-                                <ArrowRight className="h-3.5 w-3.5" strokeWidth={1.8} />
-                            </span>
+                        <div className="px-4 py-5">
+                            <h3 className="text-center font-canva text-[13px] font-bold uppercase tracking-[0.1em] text-[#1A1A1A] transition-colors duration-300 group-hover:text-white md:text-[14px]">
+                                Delhi&apos;s Rising Star 2024
+                            </h3>
                         </div>
                     </article>
 
-                    <article className="overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
+                    <article className="group overflow-hidden rounded-[10px] bg-[#E8E4DE] transition-all duration-300 hover:z-10 hover:-translate-y-3 hover:bg-[#1A1A1A] hover:shadow-[0_22px_48px_rgba(0,0,0,0.28)]">
                         <div className="relative aspect-[16/11] overflow-hidden bg-[#1A1A1A]">
                             <img
-                                src={AWARD_PHOTO}
-                                alt="IDAC Expo Delhi"
-                                className="h-full w-full object-cover brightness-[0.72]"
+                                src={expoPhoto.src}
+                                alt={expoPhoto.alt}
+                                className="h-full w-full object-cover brightness-[0.72] transition-opacity duration-300"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/10 to-transparent" />
-                            <span className="absolute bottom-4 left-4 cursor-pointer text-white">
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                            <button
+                                type="button"
+                                aria-label="Previous expo photo"
+                                onClick={() => setExpoSlide((s) => (s - 1 + expoCount) % expoCount)}
+                                className="absolute left-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
+                            >
+                                <ArrowRight className="h-6 w-6 rotate-180" strokeWidth={2.6} />
+                            </button>
+                            <button
+                                type="button"
+                                aria-label="Next expo photo"
+                                onClick={() => setExpoSlide((s) => (s + 1) % expoCount)}
+                                className="absolute right-3 bottom-4 z-[1] cursor-pointer text-white transition-opacity hover:opacity-70"
+                            >
                                 <ArrowRight className="h-6 w-6" strokeWidth={2.6} />
-                            </span>
+                            </button>
                         </div>
-                        <div className="flex items-center gap-3 px-4 py-4">
-                            <span className="font-canva text-[12px] font-medium text-[#1A1A1A]">03</span>
-                            <span className="h-px flex-1 bg-[#1A1A1A]/25" />
-                            <div className="text-right">
-                                <h3 className="font-canva text-[11px] font-bold uppercase tracking-[0.08em] text-[#1A1A1A]">
-                                    Published at IDAC Expo
-                                </h3>
-                                <p className="mt-0.5 font-canva text-[10px] font-medium uppercase tracking-[0.12em] text-[#1A1A1A]/70">
-                                    Delhi
-                                </p>
-                            </div>
+                        <div className="px-4 py-5">
+                            <h3 className="text-center font-canva text-[13px] font-bold uppercase tracking-[0.1em] text-[#1A1A1A] transition-colors duration-300 group-hover:text-white md:text-[14px]">
+                                Published at IDAC Expo
+                            </h3>
+                            <p className="mt-1 text-center font-canva text-[11px] font-medium uppercase tracking-[0.14em] text-[#1A1A1A]/70 transition-colors duration-300 group-hover:text-white/70">
+                                Delhi
+                            </p>
                         </div>
                     </article>
                 </div>
@@ -2136,106 +2131,21 @@ function TestimonialsSection() {
     );
 }
 
-function FaqsSection() {
-    const [openIndex, setOpenIndex] = useState(0);
-
-    return (
-        <section
-            id="faqs"
-            className="font-canva relative overflow-hidden bg-[#F2EDE7] pt-16 pb-16 text-[#2A2A2A] md:pt-24 md:pb-24 lg:pt-28 lg:pb-28"
-        >
-            <div
-                data-nav-light
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-0"
-            />
-            <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 md:px-10 lg:grid-cols-[minmax(240px,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-16">
-                <div className="lg:sticky lg:top-28">
-                    <p className="text-[11px] font-medium uppercase tracking-[0.32em] text-[#a1573c] md:text-[12px]">
-                        Questions
-                    </p>
-                    <h2 className="mt-4 font-canva text-[clamp(2.4rem,5.4vw,4.2rem)] font-semibold uppercase leading-[0.86] tracking-[-0.03em]">
-                        FAQs
-                    </h2>
-                    <p className="mt-5 max-w-sm font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[14px] leading-7 text-[#2A2A2A]/70 md:text-[15px]">
-                        Practical answers about working with Design Diaries — location,
-                        process, site visits, and how a project gets built.
-                    </p>
-                    <a
-                        href="#start-project"
-                        className="mt-8 inline-flex cursor-pointer items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#a1573c] transition-opacity hover:opacity-70"
-                    >
-                        Start a project
-                        <span className="h-px w-10 bg-current" />
-                    </a>
-                </div>
-
-                <div className="divide-y divide-[#2A2A2A]/12 border-y border-[#2A2A2A]/12">
-                    {FAQS.map((item, index) => {
-                        const isOpen = openIndex === index;
-                        return (
-                            <div
-                                key={item.q}
-                                className={`cursor-pointer transition-colors duration-300 ${
-                                    isOpen ? "bg-white/45" : "hover:bg-white/30"
-                                }`}
-                            >
-                                <button
-                                    type="button"
-                                    onClick={() => setOpenIndex(isOpen ? -1 : index)}
-                                    aria-expanded={isOpen}
-                                    className="flex w-full cursor-pointer items-center gap-3 px-3 py-4 text-left sm:gap-4 sm:px-4 md:gap-6 md:px-6 md:py-6"
-                                >
-                                    <span
-                                        className={`w-8 shrink-0 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[11px] tracking-[0.16em] ${
-                                            isOpen ? "text-[#a1573c]" : "text-[#2A2A2A]/35"
-                                        }`}
-                                    >
-                                        {String(index + 1).padStart(2, "0")}
-                                    </span>
-                                    <span
-                                        className={`min-w-0 flex-1 break-words font-canva text-[15px] font-medium leading-snug md:text-[19px] ${
-                                            isOpen ? "text-[#a1573c]" : "text-[#2A2A2A]"
-                                        }`}
-                                    >
-                                        {item.q}
-                                    </span>
-                                    <span
-                                        className={`flex h-9 w-9 shrink-0 items-center justify-center border text-[20px] leading-none transition-colors duration-300 ${
-                                            isOpen
-                                                ? "border-[#a1573c] text-[#a1573c]"
-                                                : "border-[#2A2A2A]/20 text-[#2A2A2A]/45"
-                                        }`}
-                                        aria-hidden="true"
-                                    >
-                                        {isOpen ? "–" : "+"}
-                                    </span>
-                                </button>
-                                <div
-                                    className="grid transition-[grid-template-rows] duration-300 ease-out"
-                                    style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
-                                >
-                                    <div className="overflow-hidden">
-                                        <p className="px-4 pb-6 pl-16 font-['Arial_MT_Pro','Arial_MT',Arial,sans-serif] text-[14px] leading-7 text-[#2A2A2A]/75 md:px-6 md:pb-7 md:pl-[5.5rem] md:text-[15px] md:leading-8">
-                                            {item.a}
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        </section>
-    );
-}
-
 function ProjectGalleryCard({ project }) {
     const [main, setMain] = useState(project.image);
     const [thumbs, setThumbs] = useState(project.thumbs);
     const busyRef = useRef(false);
     const mainImgRef = useRef(null);
     const thumbImgRefs = useRef([]);
+
+    const cycleGallery = (event) => {
+        event?.preventDefault();
+        event?.stopPropagation();
+        if (busyRef.current || thumbs.length === 0) return;
+        const nextMain = thumbs[0];
+        setThumbs([...thumbs.slice(1), main]);
+        setMain(nextMain);
+    };
 
     const swapWithMain = (index) => {
         if (busyRef.current) return;
@@ -2344,9 +2254,14 @@ function ProjectGalleryCard({ project }) {
                 <span className="absolute left-4 top-4 z-[1] font-canva text-[12px] font-medium tracking-[0.08em] text-white">
                     {project.id}
                 </span>
-                <span className="absolute right-4 top-4 z-[1] flex h-9 w-9 items-center justify-center rounded-full bg-[#1A1A1A] text-white">
+                <button
+                    type="button"
+                    aria-label={`Next ${project.name} photo`}
+                    onClick={cycleGallery}
+                    className="absolute right-4 top-4 z-[1] flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-[#1A1A1A] text-white"
+                >
                     <ArrowRight className="h-4 w-4" strokeWidth={2.2} />
-                </span>
+                </button>
             </div>
             <div className="bg-[#D9D4CD] px-3.5 pb-2.5 pt-4 transition-colors duration-300 group-hover:bg-[#1A1A1A]">
                 <p className="font-canva text-[11px] font-bold uppercase tracking-[0.16em] text-[#a1573c]">
@@ -2716,7 +2631,7 @@ export default function Home() {
             >
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
                     <div className="mx-auto max-w-4xl text-center">
-                        <p className="font-canva text-[11px] font-medium uppercase tracking-[0.36em] text-[#a1573c] md:text-[12px]">
+                        <p className="font-canva text-[11px] font-semibold uppercase tracking-[0.36em] text-[#a1573c] md:text-[12px]">
                             Gyms we&apos;ve designed
                         </p>
                         <h2 className="mt-4 font-canva text-[clamp(1.7rem,4.4vw,3.35rem)] font-bold uppercase leading-[1.08] tracking-[-0.02em] text-[#1A1A1A]">
@@ -2858,12 +2773,12 @@ export default function Home() {
                         data-reveal
                         className="relative max-w-full lg:absolute lg:left-[3.5%] lg:top-[36%] lg:max-w-[min(28vw,420px)] lg:translate-y-0"
                     >
-                        <p className="font-canva mb-3 text-[12px] font-medium uppercase tracking-[0.42em] text-white md:mb-4 md:text-[13px]">
+                        <p className="font-canva mb-3 pl-[0.55em] text-[12px] font-medium uppercase tracking-[0.42em] text-white md:mb-4 md:pl-[0.7em] md:text-[13px]">
                             About
                         </p>
-                        <h2 className="font-canva whitespace-nowrap text-[clamp(1.45rem,3.6vw,2.7rem)] font-bold uppercase leading-none tracking-[0.12em]">
-                            <span className="text-[#a1573c]">Sagrika</span>
-                            <span className="ml-[0.28em] text-white">Saraf</span>
+                        <h2 className="font-canva whitespace-nowrap text-[clamp(1.45rem,3.6vw,2.7rem)] font-extrabold uppercase leading-none tracking-[0.08em]">
+                            <span className="text-[#a1573c] [-webkit-text-stroke:0.4px_#a1573c]">Sagrika</span>
+                            <span className="ml-[0.28em] text-white [-webkit-text-stroke:0.4px_white]">Saraf</span>
                         </h2>
                     </div>
 
@@ -2931,8 +2846,6 @@ export default function Home() {
             <RecognitionSection />
 
             <TestimonialsSection />
-
-            <FaqsSection />
 
         </main>
     );
