@@ -2643,16 +2643,15 @@ export default function Home() {
                 {/* Background Video */}
                 <video
                     data-hero-media
+                    src="/videos/hero.mp4?v=2"
+                    poster="/videos/hero-poster.jpg"
                     autoPlay
                     muted
                     loop
                     playsInline
-                    webkit-playsinline="true"
                     preload="auto"
                     className="absolute inset-0 h-full w-full object-cover will-change-transform"
-                >
-                    <source src="/videos/hero.mp4" type="video/mp4" />
-                </video>
+                />
 
                 {/* Video Overlays */}
                 <div className="absolute inset-0 bg-black/40" />
