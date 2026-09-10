@@ -2550,13 +2550,17 @@ export default function Home() {
             ScrollTrigger.config({ ignoreMobileResize: true });
 
             const media = heroRef.current?.querySelector("[data-hero-media]");
-            if (isMobile && media) {
-                media.preload = "metadata";
-                const freezeHeroVideo = () => {
-                    media.pause();
+            if (media) {
+                media.muted = true;
+                media.playsInline = true;
+                media.setAttribute("playsinline", "");
+                media.setAttribute("webkit-playsinline", "");
+                const tryPlay = () => {
+                    const playPromise = media.play();
+                    if (playPromise?.catch) playPromise.catch(() => {});
                 };
-                if (media.readyState >= 2) freezeHeroVideo();
-                else media.addEventListener("loadeddata", freezeHeroVideo, { once: true });
+                if (media.readyState >= 2) tryPlay();
+                else media.addEventListener("canplay", tryPlay, { once: true });
             }
 
             if (prefersReduced) {
@@ -2643,13 +2647,11 @@ export default function Home() {
                     muted
                     loop
                     playsInline
+                    webkit-playsinline="true"
                     preload="auto"
                     className="absolute inset-0 h-full w-full object-cover will-change-transform"
                 >
-                    <source
-                        src="https://www.pexels.com/download/video/37317184/"
-                        type="video/mp4"
-                    />
+                    <source src="/videos/hero.mp4" type="video/mp4" />
                 </video>
 
                 {/* Video Overlays */}

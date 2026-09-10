@@ -15,7 +15,7 @@
         className="absolute inset-0 h-full w-full object-cover will-change-transform"
     >
         <source
-            src="https://www.pexels.com/download/video/37317184/"
+            src="/videos/hero.mp4"
             type="video/mp4"
         />
     </video>
@@ -870,7 +870,7 @@ export default function Home() {
                     className="absolute inset-0 h-full w-full object-cover will-change-transform"
                 >
                     <source
-                        src="https://www.pexels.com/download/video/37317184/"
+                        src="/videos/hero.mp4"
                         type="video/mp4"
                     />
                 </video>
