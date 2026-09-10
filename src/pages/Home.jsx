@@ -2142,20 +2142,12 @@ function FaqsSection() {
     return (
         <section
             id="faqs"
-            className="font-canva relative overflow-hidden bg-[#F2EDE7] pt-16 pb-28 text-[#2A2A2A] md:pt-24 md:pb-36 lg:pt-28 lg:pb-40"
+            className="font-canva relative overflow-hidden bg-[#F2EDE7] pt-16 pb-16 text-[#2A2A2A] md:pt-24 md:pb-24 lg:pt-28 lg:pb-28"
         >
             <div
                 data-nav-light
                 aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 top-0 bottom-36 md:bottom-44"
-            />
-            <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-36 md:h-44"
-                style={{
-                    background:
-                        "linear-gradient(180deg, #f2ede7 0%, #f2ede7 42%, #131313 100%)",
-                }}
+                className="pointer-events-none absolute inset-0"
             />
             <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-6 md:px-10 lg:grid-cols-[minmax(240px,0.78fr)_minmax(0,1.22fr)] lg:items-start lg:gap-16">
                 <div className="lg:sticky lg:top-28">
@@ -2758,7 +2750,7 @@ export default function Home() {
                 className="font-canva relative min-h-[100svh] overflow-visible py-16 pb-28 text-[#1A1A1A] md:py-20 md:pb-40"
                 style={{
                     fontFamily: '"Canva Sans", sans-serif',
-                    background: "linear-gradient(180deg, #f3efea 0%, #f3efea 50%, #131313 100%)",
+                    background: "linear-gradient(180deg, #f3efea 0%, #f3efea 50%, #0E0E0E 100%)",
                 }}
             >
                 <div
@@ -2798,7 +2790,7 @@ export default function Home() {
             {/* ================= APPROACH ================= */}
             <section
                 id="approach"
-                className="font-canva relative min-h-[100svh] overflow-hidden border-t border-[#F5F3EE]/10 bg-[#0E0E0E] py-16 text-white md:py-24"
+                className="font-canva relative min-h-[100svh] overflow-hidden bg-[#0E0E0E] py-16 text-white md:py-24"
                 style={{ fontFamily: '"Canva Sans", sans-serif' }}
             >
                 <div className="mx-auto max-w-7xl px-6 md:px-10">
@@ -2859,11 +2851,11 @@ export default function Home() {
 
                 <div
                     data-reveal-group
-                    className="relative z-10 mx-auto flex max-w-[1680px] flex-col px-5 pb-16 pt-24 sm:px-10 lg:block lg:h-[100svh] lg:px-0 lg:pb-0 lg:pt-0"
+                    className="relative z-10 mx-auto flex max-w-[1680px] flex-col px-5 pb-36 pt-24 sm:px-10 lg:block lg:h-[100svh] lg:px-0 lg:pb-0 lg:pt-0"
                 >
                     <div
                         data-reveal
-                        className="relative max-w-full lg:absolute lg:left-[3.5%] lg:top-[20%] lg:max-w-[min(28vw,420px)] lg:translate-y-0"
+                        className="relative max-w-full lg:absolute lg:left-[3.5%] lg:top-[36%] lg:max-w-[min(28vw,420px)] lg:translate-y-0"
                     >
                         <p className="font-canva mb-3 text-[12px] font-medium uppercase tracking-[0.42em] text-white md:mb-4 md:text-[13px]">
                             About
@@ -2882,7 +2874,7 @@ export default function Home() {
 
                     <div
                         data-reveal
-                        className="relative mt-2 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[1%] lg:top-[20%] lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:translate-y-0"
+                        className="relative mt-2 max-w-[540px] lg:absolute lg:bottom-auto lg:right-[1%] lg:top-[36%] lg:mt-0 lg:w-[min(38vw,460px)] lg:max-w-[460px] lg:translate-x-0 lg:translate-y-0"
                     >
                         <p className="font-arial-mt text-left text-[12px] font-normal italic leading-[1.55] text-white sm:text-[13px] sm:leading-[1.6] md:text-[13.5px] md:leading-[1.62]">
                             <span className="block xl:whitespace-nowrap">
@@ -2907,7 +2899,7 @@ export default function Home() {
 
                         <a
                             href="/about"
-                            className="font-arial-mt story-link group mt-7 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-[#a1573c] md:mt-8"
+                            className="font-arial-mt story-link group mt-4 inline-flex items-center gap-3 text-[10px] font-medium uppercase tracking-[0.22em] text-[#a1573c] md:mt-8"
                             aria-label="Read the complete story about Sagrika and Design Diaries"
                         >
                             <span className="relative inline-block pb-[3px]">

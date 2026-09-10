@@ -177,8 +177,8 @@ export default function Navbar() {
                             href="#start-project"
                             className={`relative inline-flex items-center px-6 py-2.5 text-[12px] font-bold uppercase tracking-[0.12em] transition-colors duration-300 ${
                                 darkChrome
-                                    ? "bg-[#1A1A1A] text-white hover:bg-[#3a3a3a]"
-                                    : "bg-white text-black hover:bg-[#E8E8E8]"
+                                    ? "bg-[#1A1A1A] text-white hover:bg-[#a1573c] hover:text-white"
+                                    : "bg-white text-black hover:bg-[#a1573c] hover:text-white"
                             }`}
                         >
                             Start a Project
@@ -236,7 +236,7 @@ export default function Navbar() {
                     href="#start-project"
                     data-menu-link
                     onClick={() => setMenuOpen(false)}
-                    className="relative mt-10 inline-flex items-center justify-center bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors duration-300 hover:bg-[#E8E8E8]"
+                    className="relative mt-10 inline-flex items-center justify-center bg-white px-6 py-4 text-sm font-bold uppercase tracking-[0.14em] text-black transition-colors duration-300 hover:bg-[#a1573c] hover:text-white"
                 >
                     Start a Project
                 </a>

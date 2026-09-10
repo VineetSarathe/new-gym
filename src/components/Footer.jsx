@@ -86,7 +86,7 @@ export default function Footer() {
                 <div className="max-w-[320px]">
                     <a href="#home" className="inline-block" aria-label="DesignDiaries by Sagrika">
                         <img
-                            src="/images/logo.png"
+                            src="/images/logo.png?v=3"
                             alt="DesignDiaries by Sagrika"
                             className="h-16 w-auto object-contain md:h-[4.5rem]"
                         />
